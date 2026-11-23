@@ -1,0 +1,78 @@
+<!doctype html>
+<html lang="en" class="scroll-smooth">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <script>
+      (function () {
+        try {
+          var ownDesc = Object.getOwnPropertyDescriptor(window, 'fetch');
+          var protoDesc =
+            !ownDesc && typeof Window !== 'undefined' && Window.prototype
+              ? Object.getOwnPropertyDescriptor(Window.prototype, 'fetch')
+              : null;
+          var targetDesc = ownDesc || protoDesc;
+
+          if (
+            targetDesc &&
+            targetDesc.get &&
+            !targetDesc.set &&
+            (!ownDesc || ownDesc.configurable)
+          ) {
+            var currentFetch = window.fetch;
+            Object.defineProperty(window, 'fetch', {
+              configurable: true,
+              enumerable: targetDesc.enumerable !== false,
+              get: function () {
+                return currentFetch;
+              },
+              set: function (nextFetch) {
+                if (typeof nextFetch === 'function') {
+                  currentFetch = nextFetch;
+                }
+              },
+            });
+          }
+        } catch (_err) {}
+
+        window.addEventListener(
+          'error',
+          function (event) {
+            if (
+              event &&
+              typeof event.filename === 'string' &&
+              event.filename.indexOf('chrome-extension://') === 0 &&
+              typeof event.message === 'string' &&
+              event.message.indexOf('Cannot set property fetch') !== -1
+            ) {
+              event.preventDefault();
+            }
+          },
+          true
+        );
+      })();
+    </script>
+    <title>Lofty Air Lab · Winter Smog &amp; Low-Emission Family Copilot</title>
+    <meta
+      name="description"
+      content="GenAI winter smog &amp; urban air pollution assistant helping families adopt low-emission routines, indoor air quality hacks, and measurable sustainable alternatives."
+    />
+    <meta property="og:title" content="Lofty Air Lab · Winter Smog &amp; Low-Emission Family Copilot" />
+    <meta
+      property="og:description"
+      content="GenAI winter smog &amp; urban air pollution assistant helping families adopt low-emission routines, indoor air quality hacks, and measurable sustainable alternatives."
+    />
+    <meta property="og:type" content="website" />
+    <meta name="twitter:card" content="summary_large_image" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,600;12..96,700;12..96,800&family=JetBrains+Mono:wght@500;700&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap"
+      rel="stylesheet"
+    />
+  </head>
+  <body>
+    <div id="root"></div>
+    <script type="module" src="/src/main.tsx"></script>
+  </body>
+</html>

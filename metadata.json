@@ -1,0 +1,6 @@
+{
+  "name": "Lofty Air Lab",
+  "description": "GenAI winter smog & urban air pollution assistant helping families adopt low-emission routines, indoor air quality hacks, and measurable sustainable alternatives.",
+  "requestFramePermissions": ["geolocation"],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}

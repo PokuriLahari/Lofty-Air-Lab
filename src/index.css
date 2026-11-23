@@ -1,0 +1,181 @@
+@import "tailwindcss";
+
+@theme {
+  --font-display: "Bricolage Grotesque", system-ui, sans-serif;
+  --font-sans: "Plus Jakarta Sans", system-ui, sans-serif;
+  --font-mono: "JetBrains Mono", ui-monospace, monospace;
+}
+
+:root {
+  --cream: #F7F5EE;
+  --ink: #111111;
+  --yellow: #FFE14D;
+  --pink: #FF66B3;
+  --blue: #3B66FF;
+  --lime: #C8F542;
+  --sky: #70D6FF;
+  --orange: #FF6B35;
+  --lavender: #B892FF;
+}
+
+html,
+body {
+  background-color: var(--cream);
+  color: var(--ink);
+  font-family: var(--font-sans);
+  -webkit-font-smoothing: antialiased;
+  overflow-x: hidden;
+}
+
+.font-display-tight {
+  font-family: var(--font-display);
+  line-height: 0.96;
+  letter-spacing: -0.03em;
+  text-wrap: balance;
+}
+
+.mono-num {
+  font-family: var(--font-mono);
+  font-variant-numeric: tabular-nums lining-nums;
+}
+
+/* Signature Lofty Lab Rounded Neo-Pop Card */
+.lofty-card {
+  border: 2px solid #111111;
+  border-radius: 26px;
+  box-shadow: 6px 6px 0px #111111;
+  transition: transform 180ms cubic-bezier(0.22, 1, 0.36, 1), box-shadow 180ms ease;
+}
+
+.lofty-card-hover:hover {
+  transform: translate(-3px, -3px);
+  box-shadow: 9px 9px 0px #111111;
+}
+
+/* Vertical Slot-Roll Action Buttons */
+.roll-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.45rem;
+  border-radius: 999px;
+  border: 2px solid #111111;
+  box-shadow: 4px 4px 0px #111111;
+  font-family: var(--font-display);
+  font-weight: 800;
+  cursor: pointer;
+  user-select: none;
+  text-decoration: none;
+  white-space: nowrap;
+  flex-shrink: 0;
+  transition: transform 150ms cubic-bezier(0.22, 1, 0.36, 1), box-shadow 150ms ease;
+}
+
+.roll-btn:hover:not(:disabled) {
+  transform: translate(-2px, -2px);
+  box-shadow: 6px 6px 0px #111111;
+}
+
+.roll-btn:active:not(:disabled) {
+  transform: translate(2px, 2px);
+  box-shadow: 1px 1px 0px #111111;
+}
+
+.roll-btn:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+.roll-btn:focus-visible,
+a:focus-visible,
+button:focus-visible,
+input:focus-visible,
+select:focus-visible,
+textarea:focus-visible {
+  outline: 3px solid #3B66FF;
+  outline-offset: 2px;
+}
+
+.roll-mask {
+  display: inline-block;
+  overflow: hidden;
+  height: 1.3em;
+  line-height: 1.3em;
+  vertical-align: middle;
+}
+
+.roll-track {
+  display: flex;
+  flex-direction: column;
+  transition: transform 280ms cubic-bezier(0.22, 1, 0.36, 1);
+  will-change: transform;
+}
+
+.roll-track > span {
+  display: block;
+  height: 1.3em;
+  line-height: 1.3em;
+  white-space: nowrap;
+}
+
+.roll-btn:hover:not(:disabled) .roll-track {
+  transform: translateY(-50%);
+}
+
+/* Marquee */
+@keyframes marqueeScroll {
+  0% {
+    transform: translateX(0);
+  }
+  100% {
+    transform: translateX(-50%);
+  }
+}
+
+.marquee-track {
+  display: flex;
+  width: max-content;
+  animation: marqueeScroll 28s linear infinite;
+}
+
+.marquee-wrap:hover .marquee-track {
+  animation-play-state: paused;
+}
+
+/* Interactive Habit Pills */
+.power-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.75rem 1.35rem;
+  border-radius: 999px;
+  border: 2px solid #111111;
+  box-shadow: 4px 4px 0px #111111;
+  font-family: var(--font-display);
+  font-weight: 800;
+  font-size: clamp(0.95rem, 1.5vw, 1.15rem);
+  cursor: pointer;
+  user-select: none;
+  transition: transform 180ms cubic-bezier(0.22, 1.4, 0.36, 1), box-shadow 180ms ease;
+}
+
+.power-pill:hover {
+  transform: translateY(-4px) scale(1.04) rotate(0deg) !important;
+  box-shadow: 7px 7px 0px #111111;
+}
+
+.power-pill:active {
+  transform: scale(0.97) !important;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .marquee-track {
+    animation: none;
+  }
+  .roll-btn,
+  .lofty-card,
+  .power-pill,
+  .roll-track {
+    transition: none;
+  }
+}

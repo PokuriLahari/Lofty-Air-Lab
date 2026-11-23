@@ -1,0 +1,1881 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Lofty Lab · LA Social Media &amp; Content Agency</title>
+
+  <!-- Playful Bold Display + Editorial Serif + Crisp Mono -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500;12..96,700;12..96,800&family=Instrument+Serif:ital@0;1&family=JetBrains+Mono:wght@500;700&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+
+  <!-- Tailwind CSS -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          fontFamily: {
+            display: ['"Bricolage Grotesque"', 'system-ui', 'sans-serif'],
+            serif: ['"Instrument Serif"', 'Georgia', 'serif'],
+            sans: ['"Plus Jakarta Sans"', 'system-ui', 'sans-serif'],
+            mono: ['"JetBrains Mono"', 'ui-monospace', 'monospace'],
+          },
+        },
+      },
+    };
+  </script>
+
+  <style>
+    :root {
+      --cream: #F7F5EE;
+      --ink: #111111;
+      --yellow: #FFE14D;
+      --pink: #FF66B3;
+      --blue: #3B66FF;
+      --lime: #C8F542;
+      --sky: #70D6FF;
+      --orange: #FF6B35;
+      --lavender: #B892FF;
+    }
+
+    html, body {
+      background-color: var(--cream);
+      color: var(--ink);
+      font-family: 'Plus Jakarta Sans', system-ui, sans-serif;
+      -webkit-font-smoothing: antialiased;
+      overflow-x: hidden;
+    }
+
+    .font-display-tight {
+      font-family: 'Bricolage Grotesque', system-ui, sans-serif;
+      line-height: 0.94;
+      letter-spacing: -0.03em;
+      text-wrap: balance;
+    }
+
+    .mono-num {
+      font-family: 'JetBrains Mono', ui-monospace, monospace;
+      font-variant-numeric: tabular-nums lining-nums;
+    }
+
+    /* Rounded Neo-Pop Cards (Zero Sharp Rectangles) */
+    .lofty-card {
+      border: 2px solid #111111;
+      border-radius: 26px;
+      box-shadow: 6px 6px 0px #111111;
+      transition: transform 220ms cubic-bezier(0.22, 1, 0.36, 1), box-shadow 220ms ease;
+    }
+    .lofty-card-hover:hover {
+      transform: translate(-3px, -3px);
+      box-shadow: 9px 9px 0px #111111;
+    }
+
+    /* Framer Vertical Slot-Roll Pill Buttons */
+    .roll-btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 0.45rem;
+      border-radius: 999px;
+      border: 2px solid #111111;
+      box-shadow: 4px 4px 0px #111111;
+      font-family: 'Bricolage Grotesque', system-ui, sans-serif;
+      font-weight: 800;
+      cursor: pointer;
+      user-select: none;
+      text-decoration: none;
+      transition: transform 150ms cubic-bezier(0.22, 1, 0.36, 1), box-shadow 150ms ease;
+    }
+    .roll-btn:hover {
+      transform: translate(-2px, -2px);
+      box-shadow: 6px 6px 0px #111111;
+    }
+    .roll-btn:active {
+      transform: translate(2px, 2px);
+      box-shadow: 1px 1px 0px #111111;
+    }
+
+    .roll-link {
+      display: inline-flex;
+      align-items: center;
+      text-decoration: none;
+    }
+
+    .roll-mask {
+      display: inline-block;
+      overflow: hidden;
+      height: 1.3em;
+      line-height: 1.3em;
+      vertical-align: middle;
+    }
+    .roll-track {
+      display: flex;
+      flex-direction: column;
+      transition: transform 340ms cubic-bezier(0.22, 1, 0.36, 1);
+      will-change: transform;
+    }
+    .roll-track > span {
+      display: block;
+      height: 1.3em;
+      line-height: 1.3em;
+      white-space: nowrap;
+    }
+    .roll-btn:hover .roll-track,
+    .roll-link:hover .roll-track {
+      transform: translateY(-50%);
+    }
+
+    /* Floating Sticker Motion */
+    @keyframes stickerFloat {
+      0%, 100% { transform: translateY(0) rotate(var(--rot, -5deg)); }
+      50% { transform: translateY(-9px) rotate(calc(var(--rot, -5deg) + 3deg)); }
+    }
+    .sticker-float { animation: stickerFloat 4.2s ease-in-out infinite; }
+    .sticker-float-slow { animation: stickerFloat 5.6s ease-in-out infinite 0.7s; }
+
+    /* =========================================================================
+       OPENING ANIMATION CURTAIN (REAL CLOUDS + FULL PARABOLIC FOUNTAIN)
+       ========================================================================= */
+    .lofty-intro {
+      position: fixed;
+      inset: 0;
+      z-index: 100;
+      background: linear-gradient(180deg, #4BA3EC 0%, #89CEF9 55%, #D9F1FF 100%);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      overflow: hidden;
+      transition: opacity 900ms cubic-bezier(0.22, 1, 0.36, 1), visibility 900ms ease, transform 900ms cubic-bezier(0.22, 1, 0.36, 1);
+    }
+    .lofty-intro.intro-parting .intro-cloud-left {
+      transform: translate3d(-52vw, 10vh, 0) scale(1.18);
+      opacity: 0;
+    }
+    .lofty-intro.intro-parting .intro-cloud-right {
+      transform: translate3d(52vw, 10vh, 0) scale(1.18);
+      opacity: 0;
+    }
+    .lofty-intro.intro-parting .intro-cloud-center {
+      transform: translate3d(0, 38vh, 0) scale(1.14);
+      opacity: 0;
+    }
+    .lofty-intro.intro-parting .intro-center-lockup {
+      transform: translate3d(0, 18px, 0) scale(0.95);
+      opacity: 0;
+    }
+    .lofty-intro.intro-done {
+      opacity: 0;
+      visibility: hidden;
+      pointer-events: none;
+      transform: scale(1.03);
+    }
+
+    .intro-cloud-bank {
+      position: absolute;
+      pointer-events: none;
+      will-change: transform, opacity;
+      transition: transform 1050ms cubic-bezier(0.22, 1, 0.36, 1), opacity 880ms ease;
+    }
+    .intro-center-lockup {
+      transition: transform 640ms cubic-bezier(0.22, 1, 0.36, 1), opacity 480ms ease;
+    }
+
+    /* Fountain Stage — sits behind the front cloud bank so components emerge from inside */
+    .fountain-stage {
+      position: absolute;
+      inset: 0;
+      z-index: 20;
+      pointer-events: none;
+      overflow: hidden;
+    }
+    .fountain-item {
+      position: absolute;
+      left: 50%;
+      bottom: 6%;
+      opacity: 0;
+      will-change: transform, opacity;
+      transform: translate3d(-50%, 120px, 0) scale(0.45);
+    }
+    .lofty-intro.intro-parting .intro-cloud-left {
+      transform: translate3d(-48vw, 8vh, 0) scale(1.16);
+      opacity: 0;
+    }
+    .lofty-intro.intro-parting .intro-cloud-right {
+      transform: translate3d(48vw, 8vh, 0) scale(1.16);
+      opacity: 0;
+    }
+    .lofty-intro.intro-parting .intro-cloud-center {
+      transform: translate3d(0, 34vh, 0) scale(1.12);
+      opacity: 0;
+    }
+    .lofty-intro.intro-parting .intro-center-lockup {
+      transform: translate3d(0, -32px, 0) scale(0.96);
+      opacity: 0;
+    }
+    .lofty-intro.intro-done {
+      opacity: 0;
+      visibility: hidden;
+      pointer-events: none;
+    }
+
+    .intro-cloud-bank {
+      position: absolute;
+      pointer-events: none;
+      will-change: transform, opacity;
+      transition: transform 920ms cubic-bezier(0.22, 1, 0.36, 1), opacity 760ms ease;
+    }
+    .intro-center-lockup {
+      transition: transform 680ms cubic-bezier(0.22, 1, 0.36, 1), opacity 520ms ease;
+    }
+
+    /* Fountain Stage — sits behind the front cloud bank so components emerge from inside */
+    .fountain-stage {
+      position: absolute;
+      inset: 0;
+      z-index: 20;
+      pointer-events: none;
+      overflow: hidden;
+    }
+    .fountain-item {
+      position: absolute;
+      left: 50%;
+      bottom: 8%;
+      opacity: 0;
+      will-change: transform, opacity;
+      transform: translate3d(-50%, 90px, 0) scale(0.45);
+    }
+
+    /* =========================================================================
+       REAL VOLUMETRIC SKY & CLOUDS BACKGROUND STAGE
+       ========================================================================= */
+    .hero-sky-bg {
+      background: linear-gradient(180deg, #5BB0F2 0%, #A9DCFB 58%, #F7F5EE 100%);
+    }
+    .clouds-stage {
+      position: absolute;
+      inset: 0;
+      overflow: hidden;
+      pointer-events: none;
+      z-index: 0;
+    }
+    .hero-sky-fade {
+      position: absolute;
+      inset: auto 0 0 0;
+      height: 180px;
+      pointer-events: none;
+      z-index: 1;
+      background: linear-gradient(180deg, rgba(247, 245, 238, 0) 0%, rgba(247, 245, 238, 0.85) 68%, #F7F5EE 100%);
+    }
+    @keyframes softCloudDrift {
+      0% { transform: translate3d(-32vw, 0, 0); }
+      100% { transform: translate3d(122vw, 0, 0); }
+    }
+    .soft-cloud-layer {
+      position: absolute;
+      left: 0;
+      will-change: transform;
+      animation: softCloudDrift var(--dur, 48s) linear infinite;
+      animation-delay: var(--delay, 0s);
+    }
+
+    /* =========================================================================
+       INFINITE TRUSTED-BY MARQUEE
+       ========================================================================= */
+    @keyframes marqueeScroll {
+      0% { transform: translateX(0); }
+      100% { transform: translateX(-50%); }
+    }
+    .marquee-track {
+      display: flex;
+      width: max-content;
+      animation: marqueeScroll 24s linear infinite;
+    }
+    .marquee-wrap:hover .marquee-track {
+      animation-play-state: paused;
+    }
+
+    /* =========================================================================
+       SCROLL-TRIGGERED REVEAL CHOREOGRAPHY
+       ========================================================================= */
+    .reveal {
+      opacity: 0;
+      transform: translateY(34px) scale(0.98);
+      transition: opacity 640ms cubic-bezier(0.22, 1, 0.36, 1), transform 680ms cubic-bezier(0.22, 1, 0.36, 1);
+    }
+    .reveal.in-view {
+      opacity: 1;
+      transform: translateY(0) scale(1);
+    }
+
+    /* Hero Kinetic Word Pop-In */
+    @keyframes heroPop {
+      0% { opacity: 0; transform: translateY(38px) rotate(1.5deg); }
+      100% { opacity: 1; transform: translateY(0) rotate(0deg); }
+    }
+    .hero-shell-inner {
+      transition: opacity 720ms cubic-bezier(0.22, 1, 0.36, 1), transform 820ms cubic-bezier(0.22, 1, 0.36, 1);
+    }
+    body.intro-active .hero-shell-inner {
+      opacity: 0;
+      transform: translateY(22px) scale(0.985);
+    }
+    body.intro-active .hero-line-1,
+    body.intro-active .hero-line-2,
+    body.intro-active .hero-line-3 {
+      opacity: 0;
+      animation: none;
+    }
+    .hero-line-1 { animation: heroPop 720ms cubic-bezier(0.22, 1, 0.36, 1) 80ms both; }
+    .hero-line-2 { animation: heroPop 720ms cubic-bezier(0.22, 1, 0.36, 1) 180ms both; }
+    .hero-line-3 { animation: heroPop 720ms cubic-bezier(0.22, 1, 0.36, 1) 280ms both; }
+
+    /* Draggable / Bouncy Superpower Pills */
+    .power-pill {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      padding: 0.85rem 1.45rem;
+      border-radius: 999px;
+      border: 2px solid #111111;
+      box-shadow: 4px 4px 0px #111111;
+      font-family: 'Bricolage Grotesque', sans-serif;
+      font-weight: 800;
+      font-size: clamp(1rem, 1.8vw, 1.35rem);
+      cursor: grab;
+      user-select: none;
+      touch-action: none;
+      transition: transform 220ms cubic-bezier(0.22, 1.4, 0.36, 1), box-shadow 180ms ease;
+    }
+    .power-pill:hover {
+      transform: translateY(-4px) scale(1.04) rotate(0deg) !important;
+      box-shadow: 7px 7px 0px #111111;
+    }
+    .power-pill:active {
+      cursor: grabbing;
+      transform: scale(0.97) !important;
+    }
+
+    /* Fullscreen Menu & Modal Overlays */
+    .overlay-shell {
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 260ms ease;
+    }
+    .overlay-shell.open {
+      opacity: 1;
+      pointer-events: auto;
+    }
+    .overlay-panel {
+      transform: translateY(24px) scale(0.97);
+      transition: transform 320ms cubic-bezier(0.22, 1, 0.36, 1);
+    }
+    .overlay-shell.open .overlay-panel {
+      transform: translateY(0) scale(1);
+    }
+
+    /* Work Card Image Zoom */
+    .work-img-wrap img {
+      transition: transform 520ms cubic-bezier(0.22, 1, 0.36, 1);
+    }
+    .work-card:hover .work-img-wrap img {
+      transform: scale(1.06);
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      .sticker-float, .sticker-float-slow, .spin-slow, .marquee-track, .soft-cloud-layer { animation: none; }
+      .lofty-intro { display: none !important; }
+      .reveal { opacity: 1; transform: none; }
+    }
+  </style>
+</head>
+<body class="intro-active">
+
+  <!-- =========================================================================
+       0. OPENING ANIMATION: REAL CLOUDS + COMPONENT FOUNTAIN POP-OUT
+       ========================================================================= -->
+  <div id="loftyIntro" class="lofty-intro" role="dialog" aria-label="Lofty Lab Opening Animation">
+    <!-- Background Real Sky & Drifting Volumetric Clouds -->
+    <canvas id="introSkyCanvas" class="absolute inset-0 w-full h-full block z-0" aria-hidden="true"></canvas>
+
+    <!-- Skip Button -->
+    <button id="skipIntroBtn" type="button" class="roll-btn bg-white/95 text-[#111111] px-4 py-1.5 text-xs absolute top-5 right-5 z-40">
+      Skip [Esc] ✕
+    </button>
+
+    <!-- Fountain Layer (z-20): Components Erupt From Behind/Inside the Front Cloud Bank -->
+    <div id="fountainStage" class="fountain-stage" aria-hidden="true">
+      <!-- 1. Pink Engagement Metric Card -->
+      <div class="fountain-item" data-vx="-280" data-vy="-960" data-rot="-18" data-delay="60">
+        <div class="lofty-card bg-[#FF66B3] px-5 py-3 text-[#111111] whitespace-nowrap">
+          <div class="mono-num text-[10px] font-bold uppercase opacity-80">VIRAL LIFT</div>
+          <div class="font-display text-2xl font-extrabold leading-none mt-0.5">+230%</div>
+        </div>
+      </div>
+
+      <!-- 2. Acid Lime Views Pill -->
+      <div class="fountain-item" data-vx="290" data-vy="-940" data-rot="16" data-delay="130">
+        <div class="lofty-card bg-[#C8F542] px-5 py-3 text-[#111111] whitespace-nowrap">
+          <div class="mono-num text-[10px] font-bold uppercase opacity-80">REACH</div>
+          <div class="font-display text-2xl font-extrabold leading-none mt-0.5">14.6M VIEWS</div>
+        </div>
+      </div>
+
+      <!-- 3. Sunshine Yellow Reel Card -->
+      <div class="fountain-item" data-vx="-175" data-vy="-1080" data-rot="-12" data-delay="210">
+        <div class="lofty-card bg-[#FFE14D] p-2.5 w-40">
+          <div class="rounded-2xl overflow-hidden border-2 border-[#111111] h-20 bg-[#111111] relative">
+            <img src="https://images.unsplash.com/photo-1611162617213-7d7a39e9b1d7?auto=format&fit=crop&w=400&q=75" alt="" class="w-full h-full object-cover" onerror="this.style.display='none'" />
+            <span class="absolute top-1.5 left-1.5 px-2 py-0.5 rounded-full bg-[#FF6B35] text-white text-[9px] font-extrabold">● LIVE</span>
+          </div>
+          <div class="font-display text-xs font-extrabold mt-1.5 text-center">SHORTS FACTORY</div>
+        </div>
+      </div>
+
+      <!-- 4. Cobalt 12x ROAS Card -->
+      <div class="fountain-item" data-vx="185" data-vy="-1060" data-rot="13" data-delay="280">
+        <div class="lofty-card bg-[#3B66FF] text-white px-5 py-3 whitespace-nowrap">
+          <div class="mono-num text-[10px] font-bold uppercase text-white/80">PAID SOCIAL</div>
+          <div class="font-display text-2xl font-extrabold leading-none mt-0.5">12x ROAS</div>
+        </div>
+      </div>
+
+      <!-- 5. Lavender Culture Sticker -->
+      <div class="fountain-item" data-vx="-360" data-vy="-860" data-rot="-22" data-delay="340">
+        <div class="px-5 py-2.5 rounded-full bg-[#B892FF] border-2 border-[#111111] shadow-[4px_4px_0px_#111111] font-display font-extrabold text-sm text-[#111111] whitespace-nowrap">
+          ✦ Culture Fluent
+        </div>
+      </div>
+
+      <!-- 6. Tangerine Hype Sticker -->
+      <div class="fountain-item" data-vx="360" data-vy="-850" data-rot="20" data-delay="400">
+        <div class="px-5 py-2.5 rounded-full bg-[#FF6B35] border-2 border-[#111111] shadow-[4px_4px_0px_#111111] font-display font-extrabold text-sm text-white whitespace-nowrap">
+          ★ LA Hype Team
+        </div>
+      </div>
+
+      <!-- 7. Center Hero Brand Card Completing a Tall Graceful Fountain Arc -->
+      <div class="fountain-item" data-vx="0" data-vy="-1140" data-rot="0" data-delay="170">
+        <div class="lofty-card bg-white px-7 py-4 text-center">
+          <div class="inline-flex items-center gap-1.5 px-3 py-0.5 rounded-full bg-[#FFE14D] border-2 border-[#111111] mono-num text-[10px] font-bold uppercase mb-1.5">
+            <span>★ LOS ANGELES</span>
+          </div>
+          <div class="font-display-tight text-4xl sm:text-5xl font-extrabold text-[#111111] tracking-tight">
+            LOFTY LAB
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Foreground Real Volumetric Cloud Banks (z-30): Fountain Pops Out From Behind These! -->
+    <canvas id="introCloudLeft" class="intro-cloud-bank intro-cloud-left z-30 bottom-[-8%] left-[-12%] w-[72vw] max-w-[760px] h-[44vh]" aria-hidden="true"></canvas>
+    <canvas id="introCloudRight" class="intro-cloud-bank intro-cloud-right z-30 bottom-[-8%] right-[-12%] w-[72vw] max-w-[760px] h-[44vh]" aria-hidden="true"></canvas>
+    <canvas id="introCloudCenter" class="intro-cloud-bank intro-cloud-center z-30 bottom-[-14%] left-1/2 -translate-x-1/2 w-[88vw] max-w-[980px] h-[42vh]" aria-hidden="true"></canvas>
+
+    <!-- Subtle Bottom Progress Pill -->
+    <div class="intro-center-lockup relative z-40 mt-auto mb-7 px-4 py-1.5 rounded-full bg-white/90 backdrop-blur-md border-2 border-[#111111] shadow-[3px_3px_0px_#111111] flex items-center gap-3">
+      <span class="w-2 h-2 rounded-full bg-[#FF66B3]"></span>
+      <span class="mono-num text-[11px] font-bold text-[#111111] tracking-wider">ENTERING LOFTY LAB</span>
+      <span id="introPct" class="mono-num text-[11px] font-extrabold text-[#3B66FF]">0%</span>
+    </div>
+  </div>
+
+  <!-- Toast Stack (Zero native alert/confirm) -->
+  <div id="toastStack" class="fixed bottom-5 right-5 z-[120] flex flex-col gap-2 pointer-events-none" aria-live="polite"></div>
+
+  <!-- =========================================================================
+       1. STICKY TOP NAVIGATION BAR (LOFTY LAB + MENU + CONTACT)
+       ========================================================================= -->
+  <header class="sticky top-0 z-40 px-4 sm:px-6 pt-3 pb-2">
+    <div class="max-w-[1320px] mx-auto bg-white/95 backdrop-blur-md border-2 border-[#111111] rounded-full px-4 sm:px-6 h-16 flex items-center justify-between shadow-[4px_4px_0px_#111111]">
+      <!-- Brand Wordmark -->
+      <a href="#top" class="flex items-center gap-2.5 group focus:outline-none">
+        <span class="w-9 h-9 rounded-full bg-[#FFE14D] border-2 border-[#111111] flex items-center justify-center font-display font-extrabold text-sm group-hover:rotate-12 transition-transform">
+          LL
+        </span>
+        <span class="font-display font-extrabold text-lg sm:text-xl tracking-tight">Lofty Lab</span>
+      </a>
+
+      <!-- Desktop Quick Links -->
+      <nav class="hidden lg:flex items-center gap-7 text-sm font-bold" aria-label="Primary Navigation">
+        <a href="#about" class="hover:text-[#3B66FF] transition-colors">About</a>
+        <a href="#works" class="hover:text-[#FF66B3] transition-colors">Works</a>
+        <a href="#services" class="hover:text-[#FF6B35] transition-colors">Services</a>
+        <a href="#process" class="hover:text-[#3B66FF] transition-colors">Process</a>
+        <a href="#why-us" class="hover:text-[#FF66B3] transition-colors">Why Us</a>
+      </nav>
+
+      <!-- Right Controls: Contact Us + Menu Trigger -->
+      <div class="flex items-center gap-2.5">
+        <button id="replayIntroBtn" type="button" class="roll-btn bg-[#70D6FF] text-[#111111] px-3.5 py-2 text-xs hidden md:inline-flex" title="Replay Opening Animation">
+          <span class="roll-mask">
+            <span class="roll-track">
+              <span>▶ Intro</span>
+              <span>▶ Intro</span>
+            </span>
+          </span>
+        </button>
+
+        <button type="button" class="open-contact-btn roll-btn bg-[#FFE14D] text-[#111111] px-4 py-2 text-xs sm:text-sm hidden sm:inline-flex">
+          <span class="roll-mask">
+            <span class="roll-track">
+              <span>Contact Us</span>
+              <span>Contact Us</span>
+            </span>
+          </span>
+        </button>
+
+        <button id="menuOpenBtn" type="button" class="roll-btn bg-[#111111] text-white px-4 py-2 text-xs sm:text-sm">
+          <span class="roll-mask">
+            <span class="roll-track">
+              <span>Menu</span>
+              <span>Menu</span>
+            </span>
+          </span>
+          <span class="w-2 h-2 rounded-full bg-[#C8F542]"></span>
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <!-- =========================================================================
+       2. HERO SECTION ("we create CONTENT PEOPLE CRAVE")
+       ========================================================================= -->
+  <section id="top" class="hero-sky-bg relative pt-10 pb-20 sm:pt-16 sm:pb-28 px-4 sm:px-6 overflow-hidden">
+    <!-- Real Photorealistic Volumetric Drifting Sky Clouds (WebGL + 2D Fallback) -->
+    <div id="heroCloudsStage" class="clouds-stage" aria-hidden="true">
+      <canvas id="heroRealCloudsCanvas" class="w-full h-full block"></canvas>
+    </div>
+    <!-- Soft Atmospheric Blend Into Warm Cream Canvas -->
+    <div class="hero-sky-fade" aria-hidden="true"></div>
+
+    <div class="hero-shell-inner max-w-[1320px] mx-auto relative z-10">
+      <!-- Centered Bold Editorial Hero Lockup -->
+      <div class="text-center max-w-4xl mx-auto relative">
+        <!-- Floating Decorative Stickers -->
+        <div class="hidden lg:inline-flex items-center gap-1.5 sticker-float absolute -top-2 left-2 px-4 py-1.5 rounded-full bg-[#FFE14D] border-2 border-[#111111] shadow-[4px_4px_0px_#111111] font-display font-extrabold text-xs uppercase" style="--rot: -7deg;">
+          <span>★</span><span>Los Angeles, CA</span>
+        </div>
+        <div class="hidden lg:inline-flex items-center gap-1.5 sticker-float-slow absolute top-8 right-2 px-4 py-1.5 rounded-full bg-[#FF66B3] text-[#111111] border-2 border-[#111111] shadow-[4px_4px_0px_#111111] font-display font-extrabold text-xs uppercase" style="--rot: 6deg;">
+          <span>✦</span><span>Viral Social Studio</span>
+        </div>
+
+        <h1 class="font-display-tight text-5xl sm:text-7xl lg:text-[6.2rem] font-extrabold text-[#111111] tracking-tight">
+          <span class="hero-line-1 block font-serif italic font-normal text-4xl sm:text-6xl lg:text-7xl text-[#111111]/90 mb-1">
+            we create
+          </span>
+          <span class="hero-line-2 block">
+            CONTENT
+          </span>
+          <span class="hero-line-3 inline-flex flex-wrap items-center justify-center gap-3 mt-1">
+            <span>PEOPLE</span>
+            <span class="inline-block px-5 py-1 rounded-[22px] bg-[#FFE14D] border-2 border-[#111111] shadow-[6px_6px_0px_#111111] -rotate-2">
+              CRAVE
+            </span>
+          </span>
+        </h1>
+
+        <p class="text-base sm:text-xl text-[#2A2D34] max-w-2xl mx-auto pt-7 font-medium leading-relaxed">
+          An LA social media agency turning brands into the ones everyone’s talking about. Your hype team, content factory, and strategy brain in one sleek package.
+        </p>
+
+        <!-- Primary Rolling CTA -->
+        <div class="pt-7 flex flex-wrap items-center justify-center gap-4">
+          <button type="button" class="open-contact-btn roll-btn bg-[#3B66FF] text-white px-8 py-4 text-base">
+            <span class="roll-mask">
+              <span class="roll-track">
+                <span>Contact Us</span>
+                <span>Contact Us</span>
+              </span>
+            </span>
+            <span aria-hidden="true">→</span>
+          </button>
+
+          <a href="#works" class="roll-btn bg-white text-[#111111] px-7 py-4 text-base">
+            <span class="roll-mask">
+              <span class="roll-track">
+                <span>See All Works</span>
+                <span>See All Works</span>
+              </span>
+            </span>
+          </a>
+        </div>
+      </div>
+
+      <!-- Hero Visual Reel Strip (3 Tilted Polaroid/Social Cards) -->
+      <div class="mt-14 sm:mt-20 grid grid-cols-1 md:grid-cols-3 gap-6 items-center">
+        <div class="lofty-card lofty-card-hover bg-[#FF66B3] p-3 -rotate-2">
+          <div class="rounded-[18px] overflow-hidden border-2 border-[#111111] aspect-[4/3] bg-[#111111] relative">
+            <img src="https://images.unsplash.com/photo-1522202176988-66273c2fd55f?auto=format&fit=crop&w=900&q=80" alt="Lofty Lab LA creative team collaborating" class="w-full h-full object-cover" onerror="this.src='https://placehold.co/800x600/FF66B3/111111?text=LA+Hype+Team'" />
+            <span class="absolute top-3 left-3 px-3 py-1 rounded-full bg-[#FFE14D] border-2 border-[#111111] text-[11px] font-extrabold uppercase">● LIVE SHOOT</span>
+          </div>
+        </div>
+
+        <div class="lofty-card lofty-card-hover bg-[#C8F542] p-3 md:-translate-y-4 rotate-1">
+          <div class="rounded-[18px] overflow-hidden border-2 border-[#111111] aspect-[4/3] bg-[#111111] relative">
+            <img src="https://images.unsplash.com/photo-1611162617213-7d7a39e9b1d7?auto=format&fit=crop&w=900&q=80" alt="Viral short-form social content production" class="w-full h-full object-cover" onerror="this.src='https://placehold.co/800x600/C8F542/111111?text=Viral+Shorts'" />
+            <span class="absolute bottom-3 right-3 px-3 py-1 rounded-full bg-white border-2 border-[#111111] mono-num text-xs font-bold">+230% ENGAGEMENT</span>
+          </div>
+        </div>
+
+        <div class="lofty-card lofty-card-hover bg-[#70D6FF] p-3 rotate-2">
+          <div class="rounded-[18px] overflow-hidden border-2 border-[#111111] aspect-[4/3] bg-[#111111] relative">
+            <img src="https://images.unsplash.com/photo-1515886657613-9f3515b0c78f?auto=format&fit=crop&w=900&q=80" alt="Bold colorful editorial brand campaign" class="w-full h-full object-cover" onerror="this.src='https://placehold.co/800x600/70D6FF/111111?text=Brand+Campaign'" />
+            <span class="absolute top-3 right-3 px-3 py-1 rounded-full bg-[#FF6B35] text-white border-2 border-[#111111] text-[11px] font-extrabold uppercase">14.6M VIEWS</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- =========================================================================
+       3. WHO WE ARE + TEAM PHOTO ("here's our team / let's say hi!")
+       ========================================================================= -->
+  <section id="about" class="py-16 sm:py-24 px-4 sm:px-6 border-t-2 border-[#111111] bg-white">
+    <div class="max-w-[1320px] mx-auto grid grid-cols-1 lg:grid-cols-12 gap-10 lg:gap-12 items-center">
+      <!-- Left Editorial Copy -->
+      <div class="lg:col-span-6 space-y-6 reveal">
+        <span class="inline-block px-4 py-1.5 rounded-full bg-[#B892FF] border-2 border-[#111111] shadow-[3px_3px_0px_#111111] font-display font-extrabold text-xs uppercase tracking-wider">
+          Who we are
+        </span>
+
+        <h2 class="font-display-tight text-4xl sm:text-6xl font-extrabold text-[#111111]">
+          Your hype team, content factory &amp; strategy brain in one <span class="font-serif italic font-normal text-[#3B66FF]">sleek</span> package.
+        </h2>
+
+        <p class="text-base sm:text-lg text-[#444444] leading-relaxed">
+          An LA social media agency turning brands into the ones everyone’s talking about. Think of us as your hype team, content factory, and strategy brain in one sleek package — blending culture, data, and a healthy dose of mischief.
+        </p>
+
+        <div class="pt-2">
+          <button type="button" class="open-contact-btn roll-btn bg-[#FFE14D] text-[#111111] px-7 py-3.5 text-sm">
+            <span class="roll-mask">
+              <span class="roll-track">
+                <span>About Us</span>
+                <span>About Us</span>
+              </span>
+            </span>
+            <span>→</span>
+          </button>
+        </div>
+      </div>
+
+      <!-- Right Team Photo with Signature Floating Callout Stickers -->
+      <div class="lg:col-span-6 relative reveal">
+        <div class="lofty-card bg-[#FFE14D] p-3.5 sm:p-4 relative">
+          <div class="rounded-[18px] overflow-hidden border-2 border-[#111111] aspect-[4/3] bg-[#222222]">
+            <img src="https://images.unsplash.com/photo-1529156069898-49953e39b3ac?auto=format&fit=crop&w=1100&q=80" alt="A group of people posing for a picture — Lofty Lab team" class="w-full h-full object-cover" onerror="this.src='https://placehold.co/1000x750/FFE14D/111111?text=Lofty+Lab+LA+Team'" />
+          </div>
+
+          <!-- Sticker 1: here's our team -->
+          <div class="absolute -top-5 -left-3 sm:-left-6 sticker-float px-4 py-2 rounded-full bg-[#FF66B3] text-[#111111] border-2 border-[#111111] shadow-[4px_4px_0px_#111111] font-display font-extrabold text-sm" style="--rot: -6deg;">
+            here’s our team ↓
+          </div>
+
+          <!-- Sticker 2: let's say hi! -->
+          <button type="button" class="open-contact-btn absolute -bottom-5 right-4 sm:right-8 sticker-float-slow px-5 py-2.5 rounded-full bg-[#C8F542] text-[#111111] border-2 border-[#111111] shadow-[4px_4px_0px_#111111] font-display font-extrabold text-sm cursor-pointer hover:scale-105 transition-transform" style="--rot: 5deg;">
+            let’s say hi! 👋
+          </button>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- =========================================================================
+       4. OUR WORKS (4 FEATURED CASE STUDIES WITH INTERACTIVE CASE MODAL)
+       ========================================================================= -->
+  <section id="works" class="py-20 sm:py-28 px-4 sm:px-6 border-t-2 border-[#111111] bg-[#F7F5EE]">
+    <div class="max-w-[1320px] mx-auto space-y-12">
+      <div class="flex flex-col sm:flex-row sm:items-end justify-between gap-6 reveal">
+        <div class="space-y-2">
+          <span class="inline-block px-3.5 py-1 rounded-full bg-[#FF6B35] text-white border-2 border-[#111111] font-display font-extrabold text-xs uppercase">Selected Portfolio</span>
+          <h2 class="font-display-tight text-5xl sm:text-7xl font-extrabold">Our works</h2>
+        </div>
+
+        <a href="#works" id="filterAllWorksBtn" class="roll-btn bg-white text-[#111111] px-6 py-3 text-sm self-start sm:self-auto">
+          <span class="roll-mask">
+            <span class="roll-track">
+              <span>See All Works</span>
+              <span>See All Works</span>
+            </span>
+          </span>
+          <span>↗</span>
+        </a>
+      </div>
+
+      <!-- 2x2 Editorial Case Study Grid -->
+      <div id="worksGrid" class="grid grid-cols-1 md:grid-cols-2 gap-8"></div>
+    </div>
+  </section>
+
+  <!-- =========================================================================
+       5. OUR SERVICES (5 STICKY STACKING COLORFUL SERVICE CARDS)
+       ========================================================================= -->
+  <section id="services" class="py-20 sm:py-28 px-4 sm:px-6 border-t-2 border-[#111111] bg-[#111111] text-white">
+    <div class="max-w-[1200px] mx-auto space-y-12">
+      <div class="flex flex-col md:flex-row md:items-end justify-between gap-4 reveal">
+        <div class="space-y-3">
+          <span class="inline-block px-4 py-1 rounded-full bg-[#C8F542] text-[#111111] border-2 border-[#111111] font-display font-extrabold text-xs uppercase">What we do best</span>
+          <h2 class="font-display-tight text-5xl sm:text-7xl font-extrabold text-white">Our services</h2>
+        </div>
+        <p class="text-sm sm:text-base text-white/70 max-w-md">
+          Scroll through our 5 full-stack creative engines — from influencer advocacy and viral Shorts to paid media optimization.
+        </p>
+      </div>
+
+      <!-- 5 Sticky Stacking Cards -->
+      <div id="servicesStack" class="space-y-8 pb-8"></div>
+    </div>
+  </section>
+
+  <!-- =========================================================================
+       6. OUR SUPERPOWERS (INTERACTIVE BOUNCY / TOSSABLE TAG CLOUD)
+       ========================================================================= -->
+  <section class="py-20 sm:py-28 px-4 sm:px-6 border-t-2 border-[#111111] bg-[#FFE14D] overflow-hidden">
+    <div class="max-w-[1160px] mx-auto text-center space-y-10 reveal">
+      <div class="space-y-3">
+        <span class="inline-block px-4 py-1 rounded-full bg-white border-2 border-[#111111] font-display font-extrabold text-xs uppercase">Unfair Advantages</span>
+        <h2 class="font-display-tight text-5xl sm:text-7xl font-extrabold text-[#111111]">Our superpowers</h2>
+        <p class="text-sm font-semibold text-[#111111]/75">Click or drag any badge to bounce it around</p>
+      </div>
+
+      <div id="superpowersCloud" class="flex flex-wrap items-center justify-center gap-4 sm:gap-5 py-4"></div>
+    </div>
+  </section>
+
+  <!-- =========================================================================
+       7. OUR PROCESS (01 PLAN · 02 ACTION · 03 AMPLIFY)
+       ========================================================================= -->
+  <section id="process" class="py-20 sm:py-28 px-4 sm:px-6 border-t-2 border-[#111111] bg-white">
+    <div class="max-w-[1320px] mx-auto space-y-14">
+      <div class="text-center space-y-3 reveal">
+        <span class="inline-block px-4 py-1 rounded-full bg-[#70D6FF] border-2 border-[#111111] font-display font-extrabold text-xs uppercase">How it happens</span>
+        <h2 class="font-display-tight text-5xl sm:text-7xl font-extrabold">Our process</h2>
+      </div>
+
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-7">
+        <!-- 01 Plan -->
+        <article class="lofty-card lofty-card-hover bg-[#F7F5EE] p-7 sm:p-8 flex flex-col justify-between gap-8 reveal">
+          <div class="flex items-center justify-between">
+            <span class="mono-num text-sm font-bold px-3 py-1 rounded-full bg-[#111111] text-white">01</span>
+            <span class="px-3.5 py-1 rounded-full bg-[#FFE14D] border-2 border-[#111111] font-display font-extrabold text-xs -rotate-6">STRATEGY</span>
+          </div>
+          <div class="space-y-3">
+            <h3 class="font-display text-4xl font-extrabold">Plan</h3>
+            <p class="text-base text-[#444444] leading-relaxed">
+              We dive into your brand, decode the culture, and find your next viral angle before a single camera rolls.
+            </p>
+          </div>
+        </article>
+
+        <!-- 02 Action ("Cool" Icon) -->
+        <article class="lofty-card lofty-card-hover bg-[#FF66B3] p-7 sm:p-8 flex flex-col justify-between gap-8 reveal">
+          <div class="flex items-center justify-between">
+            <span class="mono-num text-sm font-bold px-3 py-1 rounded-full bg-[#111111] text-white">02</span>
+            <span class="px-3.5 py-1 rounded-full bg-white border-2 border-[#111111] font-display font-extrabold text-xs rotate-6">😎 COOL</span>
+          </div>
+          <div class="space-y-3">
+            <h3 class="font-display text-4xl font-extrabold text-[#111111]">Action</h3>
+            <p class="text-base text-[#111111]/85 leading-relaxed font-medium">
+              We craft scroll-stopping content that grabs attention within the first 1.5 seconds and keeps viewers hooked.
+            </p>
+          </div>
+        </article>
+
+        <!-- 03 Amplify ("Wow" Icon) -->
+        <article class="lofty-card lofty-card-hover bg-[#C8F542] p-7 sm:p-8 flex flex-col justify-between gap-8 reveal">
+          <div class="flex items-center justify-between">
+            <span class="mono-num text-sm font-bold px-3 py-1 rounded-full bg-[#111111] text-white">03</span>
+            <span class="px-3.5 py-1 rounded-full bg-[#3B66FF] text-white border-2 border-[#111111] font-display font-extrabold text-xs -rotate-3">✨ WOW</span>
+          </div>
+          <div class="space-y-3">
+            <h3 class="font-display text-4xl font-extrabold text-[#111111]">Amplify</h3>
+            <p class="text-base text-[#111111]/85 leading-relaxed font-medium">
+              We share, seed, and optimize it across every channel where your audience simply can’t ignore it.
+            </p>
+          </div>
+        </article>
+      </div>
+    </div>
+  </section>
+
+  <!-- =========================================================================
+       8. TRUSTED BY (INFINITE MARQUEE OF ALL 8 LOFTY LAB BRANDS)
+       ========================================================================= -->
+  <section class="py-12 border-t-2 border-b-2 border-[#111111] bg-[#F7F5EE] overflow-hidden marquee-wrap">
+    <div class="text-center mb-6">
+      <span class="mono-num text-xs font-bold uppercase tracking-[0.2em] text-[#444444]">Trusted by</span>
+    </div>
+    <div class="marquee-track items-center gap-12">
+      <div class="flex items-center gap-12 pr-12" id="trustedBrandsA"></div>
+      <div class="flex items-center gap-12 pr-12" id="trustedBrandsB" aria-hidden="true"></div>
+    </div>
+  </section>
+
+  <!-- =========================================================================
+       9. WHY US? (4 ICON CARDS) + LOFTY LAB (SINCE 2025) COUNT-UP STATS
+       ========================================================================= -->
+  <section id="why-us" class="py-20 sm:py-28 px-4 sm:px-6 bg-white">
+    <div class="max-w-[1320px] mx-auto space-y-20">
+      <div class="space-y-12">
+        <div class="flex flex-col sm:flex-row sm:items-end justify-between gap-4 reveal">
+          <div>
+            <span class="inline-block px-4 py-1 rounded-full bg-[#FFE14D] border-2 border-[#111111] font-display font-extrabold text-xs uppercase">The Lofty Difference</span>
+            <h2 class="font-display-tight text-5xl sm:text-7xl font-extrabold mt-2">Why us?</h2>
+          </div>
+        </div>
+
+        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+          <article class="lofty-card lofty-card-hover bg-[#FFE14D] p-6 space-y-5 reveal">
+            <div class="flex items-center justify-between">
+              <span class="mono-num text-xs font-bold">01</span>
+              <span class="w-11 h-11 rounded-full bg-white border-2 border-[#111111] flex items-center justify-center text-xl">☺</span>
+            </div>
+            <div>
+              <h3 class="font-display text-2xl font-extrabold">Playful and Bold</h3>
+              <p class="text-sm text-[#111111]/80 mt-2 leading-relaxed">We dare to challenge the ordinary and push creative boundaries further.</p>
+            </div>
+          </article>
+
+          <article class="lofty-card lofty-card-hover bg-[#70D6FF] p-6 space-y-5 reveal">
+            <div class="flex items-center justify-between">
+              <span class="mono-num text-xs font-bold">02</span>
+              <span class="w-11 h-11 rounded-full bg-white border-2 border-[#111111] flex items-center justify-center text-xl">◎</span>
+            </div>
+            <div>
+              <h3 class="font-display text-2xl font-extrabold">Creative Data</h3>
+              <p class="text-sm text-[#111111]/80 mt-2 leading-relaxed">Smart strategy built on real insight and clear direction always.</p>
+            </div>
+          </article>
+
+          <article class="lofty-card lofty-card-hover bg-[#FF66B3] p-6 space-y-5 reveal">
+            <div class="flex items-center justify-between">
+              <span class="mono-num text-xs font-bold">03</span>
+              <span class="w-11 h-11 rounded-full bg-white border-2 border-[#111111] flex items-center justify-center text-xl">✦</span>
+            </div>
+            <div>
+              <h3 class="font-display text-2xl font-extrabold">Authentic</h3>
+              <p class="text-sm text-[#111111]/80 mt-2 leading-relaxed">Design that not only looks good but works beautifully in practice.</p>
+            </div>
+          </article>
+
+          <article class="lofty-card lofty-card-hover bg-[#C8F542] p-6 space-y-5 reveal">
+            <div class="flex items-center justify-between">
+              <span class="mono-num text-xs font-bold">04</span>
+              <span class="w-11 h-11 rounded-full bg-white border-2 border-[#111111] flex items-center justify-center text-xl">⚡</span>
+            </div>
+            <div>
+              <h3 class="font-display text-2xl font-extrabold">Agile</h3>
+              <p class="text-sm text-[#111111]/80 mt-2 leading-relaxed">We turn ideas into meaningful and engaging experiences for people.</p>
+            </div>
+          </article>
+        </div>
+      </div>
+
+      <!-- LOFTY LAB (SINCE 2025) METRICS BANNER -->
+      <div id="statsBanner" class="lofty-card bg-[#111111] text-white p-8 sm:p-12 space-y-8 reveal">
+        <div class="flex flex-wrap items-center justify-between gap-3 border-b border-white/15 pb-5">
+          <span class="font-display text-2xl sm:text-3xl font-extrabold tracking-tight">LOFTY LAB</span>
+          <span class="mono-num text-xs font-bold px-3 py-1 rounded-full bg-[#FFE14D] text-[#111111]">(SINCE 2025)</span>
+        </div>
+
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+          <div class="space-y-1">
+            <div class="font-display text-5xl sm:text-7xl font-extrabold text-[#C8F542] mono-num" data-count-target="230" data-prefix="+" data-suffix="%">+230%</div>
+            <div class="text-sm sm:text-base text-white/75 font-medium">Average engagement</div>
+          </div>
+          <div class="space-y-1">
+            <div class="font-display text-5xl sm:text-7xl font-extrabold text-[#FF66B3] mono-num" data-count-target="12" data-prefix="" data-suffix="x">12x</div>
+            <div class="text-sm sm:text-base text-white/75 font-medium">ROI on paid social</div>
+          </div>
+          <div class="space-y-1">
+            <div class="font-display text-5xl sm:text-7xl font-extrabold text-[#FFE14D] mono-num" data-count-target="14.6" data-decimals="1" data-prefix="" data-suffix="M">14.6M</div>
+            <div class="text-sm sm:text-base text-white/75 font-medium">Views generated</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- =========================================================================
+       10. TESTIMONIALS CAROUSEL ("Don't just take our words for it")
+       ========================================================================= -->
+  <section class="py-20 sm:py-28 px-4 sm:px-6 border-t-2 border-[#111111] bg-[#F7F5EE]">
+    <div class="max-w-[1200px] mx-auto space-y-10">
+      <div class="flex flex-col sm:flex-row sm:items-end justify-between gap-6 reveal">
+        <div class="space-y-2">
+          <span class="inline-block px-4 py-1 rounded-full bg-[#B892FF] border-2 border-[#111111] font-display font-extrabold text-xs uppercase">Client Love</span>
+          <h2 class="font-display-tight text-4xl sm:text-6xl font-extrabold">Don’t just take our words for it</h2>
+        </div>
+
+        <div class="flex items-center gap-3">
+          <button id="testiPrevBtn" type="button" class="roll-btn bg-white text-[#111111] w-12 h-12 text-lg" aria-label="Previous Testimonial">←</button>
+          <button id="testiNextBtn" type="button" class="roll-btn bg-[#FFE14D] text-[#111111] w-12 h-12 text-lg" aria-label="Next Testimonial">→</button>
+        </div>
+      </div>
+
+      <!-- Active Testimonial Stage -->
+      <div id="testimonialStage" class="lofty-card bg-white p-7 sm:p-11 grid grid-cols-1 md:grid-cols-12 gap-8 items-center reveal"></div>
+
+      <!-- Dots Indicator -->
+      <div id="testimonialDots" class="flex items-center justify-center gap-2.5"></div>
+    </div>
+  </section>
+
+  <!-- =========================================================================
+       11. READY TO BE FAMOUS? CTA + FOOTER
+       ========================================================================= -->
+  <section class="py-20 sm:py-28 px-4 sm:px-6 border-t-2 border-[#111111] bg-[#3B66FF] text-white relative overflow-hidden">
+    <!-- Real Volumetric Soft Clouds Behind Closing CTA -->
+    <div class="clouds-stage" aria-hidden="true">
+      <canvas id="ctaRealCloudsCanvas" class="w-full h-full block opacity-55"></canvas>
+    </div>
+
+    <div class="max-w-[1100px] mx-auto text-center space-y-8 relative z-10 reveal">
+      <div class="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-[#FFE14D] text-[#111111] border-2 border-[#111111] shadow-[4px_4px_0px_#111111] font-display font-extrabold text-sm -rotate-2">
+        <span>🚀 LET’S GO</span>
+      </div>
+
+      <h2 class="font-display-tight text-5xl sm:text-8xl font-extrabold text-white">
+        Ready to be <span class="font-serif italic font-normal text-[#FFE14D]">famous?</span>
+      </h2>
+
+      <div class="pt-2">
+        <button type="button" class="open-contact-btn roll-btn bg-[#C8F542] text-[#111111] px-9 py-4 text-base sm:text-lg">
+          <span class="roll-mask">
+            <span class="roll-track">
+              <span>Book a Strategy Call</span>
+              <span>Book a Strategy Call</span>
+            </span>
+          </span>
+          <span>→</span>
+        </button>
+      </div>
+    </div>
+  </section>
+
+  <footer class="bg-[#111111] text-white border-t-2 border-[#111111] pt-16 pb-10 px-4 sm:px-6">
+    <div class="max-w-[1320px] mx-auto space-y-14">
+      <div class="grid grid-cols-1 md:grid-cols-12 gap-10">
+        <!-- Brand & Email -->
+        <div class="md:col-span-5 space-y-4">
+          <div class="font-display text-4xl sm:text-5xl font-extrabold tracking-tight text-[#FFE14D]">Lofty Lab</div>
+          <a href="mailto:loftylab@email.com" class="inline-block text-lg sm:text-xl font-semibold text-white/90 hover:text-[#C8F542] underline underline-offset-4">
+            loftylab@email.com
+          </a>
+          <div class="flex flex-wrap gap-4 pt-2 text-sm font-bold text-white/80">
+            <a href="#top" class="roll-link hover:text-[#FFE14D]">
+              <span class="roll-mask"><span class="roll-track"><span>Facebook</span><span>Facebook</span></span></span>
+            </a>
+            <a href="#top" class="roll-link hover:text-[#FF66B3]">
+              <span class="roll-mask"><span class="roll-track"><span>LinkedIn</span><span>LinkedIn</span></span></span>
+            </a>
+            <a href="#top" class="roll-link hover:text-[#C8F542]">
+              <span class="roll-mask"><span class="roll-track"><span>TikTok</span><span>TikTok</span></span></span>
+            </a>
+          </div>
+        </div>
+
+        <!-- Visit Links -->
+        <div class="md:col-span-7 grid grid-cols-2 sm:grid-cols-3 gap-6 text-sm">
+          <div class="space-y-2.5">
+            <div class="mono-num text-[11px] uppercase tracking-widest text-white/45">Visit</div>
+            <ul class="space-y-2 font-bold">
+              <li><a href="#top" class="hover:text-[#FFE14D]">Home</a></li>
+              <li><a href="#about" class="hover:text-[#FFE14D]">About</a></li>
+              <li><a href="#works" class="hover:text-[#FFE14D]">Works</a></li>
+            </ul>
+          </div>
+          <div class="space-y-2.5">
+            <div class="mono-num text-[11px] uppercase tracking-widest text-white/45">Explore</div>
+            <ul class="space-y-2 font-bold">
+              <li><a href="#services" class="hover:text-[#FF66B3]">Service</a></li>
+              <li><a href="#process" class="hover:text-[#FF66B3]">Process</a></li>
+              <li><a href="#why-us" class="hover:text-[#FF66B3]">Why Us</a></li>
+            </ul>
+          </div>
+          <div class="space-y-2.5">
+            <div class="mono-num text-[11px] uppercase tracking-widest text-white/45">Connect</div>
+            <ul class="space-y-2 font-bold">
+              <li><button type="button" class="open-contact-btn hover:text-[#C8F542] cursor-pointer">Contact</button></li>
+              <li><button type="button" class="open-contact-btn hover:text-[#C8F542] cursor-pointer">Book Strategy Call</button></li>
+            </ul>
+          </div>
+        </div>
+      </div>
+
+      <div class="pt-6 border-t border-white/15 flex flex-col sm:flex-row items-center justify-between gap-3 text-xs mono-num text-white/50">
+        <span>© 2026 Lofty Lab — Los Angeles, CA</span>
+        <span>Built with bold motion &amp; zero boredom</span>
+      </div>
+    </div>
+  </footer>
+
+  <!-- =========================================================================
+       FULLSCREEN ANIMATED MENU DRAWER
+       ========================================================================= -->
+  <div id="menuOverlay" class="overlay-shell fixed inset-0 z-50 bg-[#111111]/70 backdrop-blur-md flex items-center justify-center p-4" role="dialog" aria-modal="true" aria-label="Site Menu">
+    <div class="overlay-panel lofty-card bg-[#FFE14D] w-full max-w-2xl p-6 sm:p-10 space-y-8">
+      <div class="flex items-center justify-between">
+        <span class="font-display font-extrabold text-xl">Lofty Lab · Menu</span>
+        <button id="menuCloseBtn" type="button" class="roll-btn bg-[#111111] text-white px-4 py-2 text-xs">Close ✕</button>
+      </div>
+
+      <nav class="flex flex-col gap-3 font-display text-4xl sm:text-5xl font-extrabold">
+        <a href="#top" class="menu-nav-link hover:translate-x-3 transition-transform">01 · Home</a>
+        <a href="#about" class="menu-nav-link hover:translate-x-3 transition-transform">02 · About Us</a>
+        <a href="#works" class="menu-nav-link hover:translate-x-3 transition-transform">03 · Our Works</a>
+        <a href="#services" class="menu-nav-link hover:translate-x-3 transition-transform">04 · Our Services</a>
+        <a href="#process" class="menu-nav-link hover:translate-x-3 transition-transform">05 · Our Process</a>
+        <button type="button" class="open-contact-btn menu-nav-link text-left hover:translate-x-3 transition-transform cursor-pointer">06 · Contact Us →</button>
+      </nav>
+    </div>
+  </div>
+
+  <!-- =========================================================================
+       PROJECT CASE STUDY MODAL
+       ========================================================================= -->
+  <div id="projectModal" class="overlay-shell fixed inset-0 z-50 bg-[#111111]/75 backdrop-blur-md flex items-center justify-center p-4" role="dialog" aria-modal="true" aria-labelledby="projModalTitle">
+    <div class="overlay-panel lofty-card bg-white w-full max-w-2xl overflow-hidden">
+      <div id="projModalBanner" class="h-56 sm:h-64 relative border-b-2 border-[#111111]">
+        <img id="projModalImg" src="" alt="" class="w-full h-full object-cover" />
+        <button id="projModalClose" type="button" class="roll-btn bg-white text-[#111111] px-3.5 py-1.5 text-xs absolute top-4 right-4">✕ Close</button>
+      </div>
+      <div class="p-6 sm:p-8 space-y-5">
+        <div class="flex flex-wrap items-center gap-2">
+          <span id="projModalCat" class="px-3 py-1 rounded-full bg-[#FFE14D] border-2 border-[#111111] text-xs font-extrabold uppercase"></span>
+          <span id="projModalStat" class="mono-num text-xs font-bold px-3 py-1 rounded-full bg-[#C8F542] border-2 border-[#111111]"></span>
+        </div>
+        <h3 id="projModalTitle" class="font-display text-3xl sm:text-4xl font-extrabold"></h3>
+        <p id="projModalDesc" class="text-sm sm:text-base text-[#444444] leading-relaxed"></p>
+        <div class="pt-2 flex justify-end">
+          <button type="button" class="open-contact-btn roll-btn bg-[#3B66FF] text-white px-6 py-3 text-xs">
+            <span class="roll-mask"><span class="roll-track"><span>Start a Similar Campaign</span><span>Start a Similar Campaign</span></span></span>
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- =========================================================================
+       BOOK A STRATEGY CALL / CONTACT MODAL
+       ========================================================================= -->
+  <div id="contactModal" class="overlay-shell fixed inset-0 z-50 bg-[#111111]/75 backdrop-blur-md flex items-center justify-center p-4" role="dialog" aria-modal="true" aria-labelledby="contactModalTitle">
+    <div class="overlay-panel lofty-card bg-[#F7F5EE] w-full max-w-lg p-6 sm:p-8 space-y-5">
+      <div class="flex items-start justify-between gap-3">
+        <div>
+          <span class="px-3 py-1 rounded-full bg-[#C8F542] border-2 border-[#111111] text-[11px] font-extrabold uppercase">LA STRATEGY DESK</span>
+          <h3 id="contactModalTitle" class="font-display text-3xl font-extrabold mt-2">Book a Strategy Call</h3>
+        </div>
+        <button id="contactCloseBtn" type="button" class="roll-btn bg-white px-3 py-1.5 text-xs">✕</button>
+      </div>
+
+      <form id="contactForm" class="space-y-3.5">
+        <div>
+          <label class="block text-xs font-bold uppercase mb-1">Your Name</label>
+          <input id="cName" type="text" required placeholder="Alex Rivera" class="w-full px-4 py-2.5 rounded-xl bg-white border-2 border-[#111111] text-sm outline-none focus:ring-2 focus:ring-[#3B66FF]" />
+        </div>
+        <div>
+          <label class="block text-xs font-bold uppercase mb-1">Brand / Work Email</label>
+          <input id="cEmail" type="email" required placeholder="alex@yourbrand.com" class="w-full px-4 py-2.5 rounded-xl bg-white border-2 border-[#111111] text-sm outline-none focus:ring-2 focus:ring-[#3B66FF]" />
+        </div>
+        <div>
+          <label class="block text-xs font-bold uppercase mb-1">What are we building?</label>
+          <select id="cService" class="w-full px-4 py-2.5 rounded-xl bg-white border-2 border-[#111111] text-sm font-semibold outline-none">
+            <option>Influencer Marketing</option>
+            <option>Shorts Content (TikTok / Reels / Shorts)</option>
+            <option>UGC Production</option>
+            <option>Paid Social Advertisement</option>
+            <option>Full Social Campaign</option>
+          </select>
+        </div>
+        <button type="submit" class="roll-btn bg-[#3B66FF] text-white w-full py-3.5 text-sm">
+          <span class="roll-mask"><span class="roll-track"><span>Send Brief &amp; Lock Call →</span><span>Send Brief &amp; Lock Call →</span></span></span>
+        </button>
+      </form>
+    </div>
+  </div>
+
+  <!-- =========================================================================
+       INTERACTIVE ANIMATIONS, CAROUSEL, DRAGGABLE SUPERPOWERS & MODALS
+       ========================================================================= -->
+  <script>
+    (function () {
+      'use strict';
+
+      /* ---------------------------------------------------------------------
+         0A. REAL VOLUMETRIC CUMULUS CLOUD RENDERER (WEBGL GLSL + 2D FALLBACK)
+         Renders photorealistic sunlit California cumulus clouds drifting across
+         the sky — zero flat cartoon SVG outlines.
+         --------------------------------------------------------------------- */
+      const CLOUD_VERT = `
+        attribute vec2 a_pos;
+        void main() { gl_Position = vec4(a_pos, 0.0, 1.0); }
+      `;
+      const CLOUD_FRAG = `
+        precision highp float;
+        uniform float u_time;
+        uniform vec2 u_res;
+        uniform vec2 u_mouse;
+        uniform vec3 u_skyTop;
+        uniform vec3 u_skyBot;
+        uniform float u_density;
+
+        float hash(vec2 p) {
+          p = fract(p * vec2(123.34, 456.21));
+          p += dot(p, p + 45.32);
+          return fract(p.x * p.y);
+        }
+        float noise(vec2 p) {
+          vec2 i = floor(p);
+          vec2 f = fract(p);
+          vec2 u = f * f * (3.0 - 2.0 * f);
+          return mix(
+            mix(hash(i + vec2(0.0, 0.0)), hash(i + vec2(1.0, 0.0)), u.x),
+            mix(hash(i + vec2(0.0, 1.0)), hash(i + vec2(1.0, 1.0)), u.x),
+            u.y
+          );
+        }
+        float fbm(vec2 p) {
+          float v = 0.0;
+          float a = 0.52;
+          mat2 rot = mat2(0.80, 0.60, -0.60, 0.80);
+          for (int i = 0; i < 6; i++) {
+            v += a * noise(p);
+            p = rot * p * 2.04 + vec2(1.7, 9.2);
+            a *= 0.49;
+          }
+          return v;
+        }
+        void main() {
+          vec2 uv = gl_FragCoord.xy / u_res;
+          float aspect = u_res.x / max(u_res.y, 1.0);
+          vec2 p = vec2((uv.x - 0.5) * aspect, uv.y);
+
+          // Subtle pointer parallax
+          p += (u_mouse - 0.5) * vec2(-0.14, 0.06);
+
+          // Crisp sunlit California sky gradient
+          vec3 sky = mix(u_skyBot, u_skyTop, pow(clamp(uv.y, 0.0, 1.0), 0.72));
+
+          // Soft warm sun glow upper-right
+          vec2 sunPos = vec2(0.45 * aspect, 0.88);
+          float sunDist = length(p - sunPos);
+          sky += vec3(1.0, 0.96, 0.88) * exp(-sunDist * 2.4) * 0.24;
+
+          // Far atmospheric cloud layer (slow drift)
+          vec2 pFar = p * vec2(1.45, 2.2) + vec2(-u_time * 0.022, 0.0);
+          float nFar = fbm(pFar);
+          float cFar = smoothstep(0.48, 0.78, nFar);
+
+          // Near volumetric cumulus layer (faster drift + self-shadowing)
+          vec2 pNear = p * vec2(1.95, 2.75) + vec2(-u_time * 0.052, 0.4);
+          float nNear = fbm(pNear + vec2(fbm(pNear * 0.65 + u_time * 0.015) * 0.45));
+          // Directional sunlight sample offset toward upper-right sun
+          float nLit = fbm(pNear + vec2(0.10, 0.14));
+          float density = smoothstep(0.42 - u_density * 0.08, 0.76, nNear);
+
+          // Volumetric shading: bright sunlit silver-white tops + soft cool-blue shadowed bellies
+          float sunShade = clamp((nNear - nLit) * 2.4 + 0.62, 0.0, 1.0);
+          vec3 cloudShadow = mix(u_skyTop * 0.78 + vec3(0.18), vec3(0.76, 0.83, 0.92), 0.68);
+          vec3 cloudLit = vec3(1.0, 0.995, 0.985);
+          vec3 cloudCol = mix(cloudShadow, cloudLit, smoothstep(0.18, 0.88, sunShade));
+
+          vec3 col = mix(sky, vec3(0.95, 0.97, 1.0), cFar * 0.55);
+          col = mix(col, cloudCol, density * 0.94);
+
+          gl_FragColor = vec4(col, 1.0);
+        }
+      `;
+
+      function mountVolumetricSky(canvasEl, skyTopRgb, skyBotRgb, densityVal) {
+        if (!canvasEl) return null;
+        const gl = canvasEl.getContext('webgl', { antialias: false, alpha: false, powerPreference: 'high-performance' });
+        if (!gl) {
+          // Graceful 2D soft-cumulus fallback
+          paintSoftCloudBank(canvasEl, 22, true);
+          return null;
+        }
+        const compile = (type, src) => {
+          const sh = gl.createShader(type);
+          gl.shaderSource(sh, src);
+          gl.compileShader(sh);
+          return gl.getShaderParameter(sh, gl.COMPILE_STATUS) ? sh : null;
+        };
+        const vs = compile(gl.VERTEX_SHADER, CLOUD_VERT);
+        const fs = compile(gl.FRAGMENT_SHADER, CLOUD_FRAG);
+        if (!vs || !fs) return null;
+
+        const prog = gl.createProgram();
+        gl.attachShader(prog, vs);
+        gl.attachShader(prog, fs);
+        gl.linkProgram(prog);
+        gl.useProgram(prog);
+
+        const buf = gl.createBuffer();
+        gl.bindBuffer(gl.ARRAY_BUFFER, buf);
+        gl.bufferData(gl.ARRAY_BUFFER, new Float32Array([-1, -1, 1, -1, -1, 1, 1, 1]), gl.STATIC_DRAW);
+        const loc = gl.getAttribLocation(prog, 'a_pos');
+        gl.enableVertexAttribArray(loc);
+        gl.vertexAttribPointer(loc, 2, gl.FLOAT, false, 0, 0);
+
+        const U = (n) => gl.getUniformLocation(prog, n);
+        const locs = {
+          time: U('u_time'), res: U('u_res'), mouse: U('u_mouse'),
+          skyTop: U('u_skyTop'), skyBot: U('u_skyBot'), density: U('u_density'),
+        };
+
+        const resize = () => {
+          const dpr = Math.min(window.devicePixelRatio || 1, 1.75);
+          const w = Math.max(2, Math.floor(canvasEl.clientWidth * dpr));
+          const h = Math.max(2, Math.floor(canvasEl.clientHeight * dpr));
+          if (canvasEl.width !== w || canvasEl.height !== h) {
+            canvasEl.width = w;
+            canvasEl.height = h;
+          }
+          gl.viewport(0, 0, w, h);
+        };
+        resize();
+        window.addEventListener('resize', resize);
+
+        return {
+          render(tSec, mx, my) {
+            if (!canvasEl.clientWidth || !canvasEl.clientHeight) return;
+            resize();
+            gl.useProgram(prog);
+            gl.uniform1f(locs.time, tSec);
+            gl.uniform2f(locs.res, canvasEl.width, canvasEl.height);
+            gl.uniform2f(locs.mouse, mx, my);
+            gl.uniform3fv(locs.skyTop, skyTopRgb);
+            gl.uniform3fv(locs.skyBot, skyBotRgb);
+            gl.uniform1f(locs.density, densityVal);
+            gl.drawArrays(gl.TRIANGLE_STRIP, 0, 4);
+          },
+        };
+      }
+
+      // Paint photorealistic volumetric cumulus cloud banks (soft sunlit puffs + cool undersides)
+      // used for the foreground opening curtain that components burst OUT FROM BEHIND.
+      function paintSoftCloudBank(canvasEl, puffCount, fillSky = false) {
+        if (!canvasEl) return;
+        const dpr = Math.min(window.devicePixelRatio || 1, 2);
+        const w = Math.max(320, canvasEl.clientWidth || 720);
+        const h = Math.max(180, canvasEl.clientHeight || 320);
+        canvasEl.width = Math.floor(w * dpr);
+        canvasEl.height = Math.floor(h * dpr);
+        const ctx = canvasEl.getContext('2d');
+        ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+        ctx.clearRect(0, 0, w, h);
+
+        if (fillSky) {
+          const sg = ctx.createLinearGradient(0, 0, 0, h);
+          sg.addColorStop(0, '#5BB0F2');
+          sg.addColorStop(1, '#D8F1FF');
+          ctx.fillStyle = sg;
+          ctx.fillRect(0, 0, w, h);
+        }
+
+        // Layer 1: Cool atmospheric shadowed cloud base
+        for (let i = 0; i < puffCount; i++) {
+          const t = i / Math.max(1, puffCount - 1);
+          const cx = w * (0.08 + t * 0.84) + Math.sin(i * 2.7) * 26;
+          const arch = Math.sin(t * Math.PI);
+          const cy = h * (0.86 - arch * 0.34) + Math.cos(i * 1.9) * 14;
+          const r = (h * 0.28 + arch * h * 0.22) * (0.85 + (i % 3) * 0.14);
+
+          const gShadow = ctx.createRadialGradient(cx, cy + r * 0.12, r * 0.08, cx, cy, r);
+          gShadow.addColorStop(0, 'rgba(198, 214, 232, 0.92)');
+          gShadow.addColorStop(0.55, 'rgba(216, 228, 242, 0.72)');
+          gShadow.addColorStop(1, 'rgba(220, 232, 246, 0)');
+          ctx.fillStyle = gShadow;
+          ctx.beginPath();
+          ctx.arc(cx, cy, r, 0, Math.PI * 2);
+          ctx.fill();
+        }
+
+        // Layer 2: Bright sunlit white volumetric cumulus crowns
+        for (let i = 0; i < puffCount + 6; i++) {
+          const t = i / Math.max(1, puffCount + 5);
+          const cx = w * (0.10 + t * 0.80) + Math.cos(i * 3.1) * 22;
+          const arch = Math.sin(t * Math.PI);
+          const cy = h * (0.76 - arch * 0.38) + Math.sin(i * 2.3) * 16;
+          const r = (h * 0.22 + arch * h * 0.20) * (0.82 + (i % 4) * 0.10);
+
+          const gLit = ctx.createRadialGradient(cx - r * 0.16, cy - r * 0.24, r * 0.05, cx, cy, r);
+          gLit.addColorStop(0, 'rgba(255, 255, 255, 0.99)');
+          gLit.addColorStop(0.48, 'rgba(252, 253, 255, 0.88)');
+          gLit.addColorStop(0.78, 'rgba(235, 244, 252, 0.42)');
+          gLit.addColorStop(1, 'rgba(255, 255, 255, 0)');
+          ctx.fillStyle = gLit;
+          ctx.beginPath();
+          ctx.arc(cx, cy, r, 0, Math.PI * 2);
+          ctx.fill();
+        }
+      }
+
+      const heroSkyGL = mountVolumetricSky(
+        document.getElementById('heroRealCloudsCanvas'),
+        [0.29, 0.64, 0.93],
+        [0.82, 0.93, 0.99],
+        0.55
+      );
+      const introSkyGL = mountVolumetricSky(
+        document.getElementById('introSkyCanvas'),
+        [0.24, 0.59, 0.91],
+        [0.78, 0.92, 0.99],
+        0.65
+      );
+      const ctaSkyGL = mountVolumetricSky(
+        document.getElementById('ctaRealCloudsCanvas'),
+        [0.23, 0.40, 1.0],
+        [0.36, 0.56, 1.0],
+        0.45
+      );
+
+      let mouseTargetX = 0.5, mouseTargetY = 0.5, mouseX = 0.5, mouseY = 0.5;
+      window.addEventListener('pointermove', (e) => {
+        mouseTargetX = e.clientX / Math.max(1, window.innerWidth);
+        mouseTargetY = 1.0 - e.clientY / Math.max(1, window.innerHeight);
+      }, { passive: true });
+
+      const reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+      let cloudLastT = performance.now();
+      let cloudTime = 0;
+
+      function tickRealClouds(now) {
+        requestAnimationFrame(tickRealClouds);
+        if (document.hidden) { cloudLastT = now; return; }
+        const dt = Math.min((now - cloudLastT) / 1000, 0.05);
+        cloudLastT = now;
+        cloudTime += dt * (reducedMotion ? 0.15 : 1.0);
+
+        const k = 1 - Math.exp(-5.0 * dt);
+        mouseX += (mouseTargetX - mouseX) * k;
+        mouseY += (mouseTargetY - mouseY) * k;
+
+        if (heroSkyGL) heroSkyGL.render(cloudTime, mouseX, mouseY);
+        if (introSkyGL && !document.getElementById('loftyIntro').classList.contains('intro-done')) {
+          introSkyGL.render(cloudTime * 1.25, mouseX, mouseY);
+        }
+        if (ctaSkyGL) ctaSkyGL.render(cloudTime * 0.85, mouseX, mouseY);
+      }
+      requestAnimationFrame(tickRealClouds);
+
+      /* ---------------------------------------------------------------------
+         0B. CLOUD-FOUNTAIN OPENING ANIMATION CONTROLLER
+         Components pop out from behind the real foreground clouds in ballistic
+         parabolic fountain arcs, hover briefly, then the clouds part to reveal
+         the live landing page.
+         --------------------------------------------------------------------- */
+      const loftyIntro = document.getElementById('loftyIntro');
+      const introPct = document.getElementById('introPct');
+      const fountainItems = Array.from(document.querySelectorAll('#fountainStage .fountain-item'));
+      let introRaf = 0;
+      let introPartTimer = 0;
+      let introDoneTimer = 0;
+
+      function paintIntroBanks() {
+        paintSoftCloudBank(document.getElementById('introCloudLeft'), 16);
+        paintSoftCloudBank(document.getElementById('introCloudRight'), 16);
+        paintSoftCloudBank(document.getElementById('introCloudCenter'), 20);
+      }
+      paintIntroBanks();
+      window.addEventListener('resize', paintIntroBanks);
+
+      function finishIntro() {
+        cancelAnimationFrame(introRaf);
+        clearTimeout(introPartTimer);
+        clearTimeout(introDoneTimer);
+        if (loftyIntro) {
+          loftyIntro.classList.add('intro-parting');
+          loftyIntro.classList.add('intro-done');
+        }
+        document.body.classList.remove('intro-active');
+      }
+
+      function playOpeningAnimation() {
+        if (!loftyIntro || reducedMotion) {
+          finishIntro();
+          return;
+        }
+        cancelAnimationFrame(introRaf);
+        clearTimeout(introPartTimer);
+        clearTimeout(introDoneTimer);
+
+        document.body.classList.add('intro-active');
+        loftyIntro.classList.remove('intro-parting', 'intro-done');
+        paintIntroBanks();
+
+        // Scale fountain spread & vertical gravity cleanly for mobile vs desktop
+        const spreadScale = Math.min(1, window.innerWidth / 1080);
+        const liftScale = Math.min(1, window.innerHeight / 760);
+        const gravity = 1120 * liftScale; // Real ballistic gravity pulls components back down through the fountain arc
+        const start = performance.now();
+        const totalDuration = 2450;
+        let partingTriggered = false;
+
+        function tickFountain(now) {
+          const elapsed = now - start;
+          const globalT = Math.min(1, elapsed / totalDuration);
+          if (introPct) introPct.textContent = `${Math.round(globalT * 100)}%`;
+
+          fountainItems.forEach((el) => {
+            const delay = Number(el.dataset.delay || 0);
+            const localSec = (elapsed - delay) / 1000;
+            if (localSec <= 0) {
+              el.style.opacity = '0';
+              el.style.transform = 'translate3d(-50%, 120px, 0) scale(0.45)';
+              return;
+            }
+
+            // Full continuous parabolic fountain physics:
+            // shoots up from behind the front cloud bank, arcs gracefully over apex,
+            // and cascades back down/outward without ever pausing in mid-air!
+            const vx = Number(el.dataset.vx || 0) * spreadScale;
+            const vy = Number(el.dataset.vy || -960) * liftScale;
+            const rotTarget = Number(el.dataset.rot || 0);
+
+            const x = vx * localSec;
+            const y = 90 + vy * localSec + 0.5 * gravity * localSec * localSec;
+            const rot = rotTarget * Math.min(1.35, localSec * 0.95);
+            const sc = Math.min(1.04, 0.48 + localSec * 0.85);
+
+            // Fade in smoothly as it emerges from the clouds; fade out softly as it falls back below the cloud line
+            const fadeIn = Math.min(1, localSec / 0.18);
+            const fadeOut = localSec > 1.35 ? Math.max(0, 1 - (localSec - 1.35) / 0.55) : 1;
+            const op = fadeIn * fadeOut;
+
+            el.style.opacity = op.toFixed(3);
+            el.style.transform = `translate3d(calc(-50% + ${x.toFixed(1)}px), ${y.toFixed(1)}px, 0) rotate(${rot.toFixed(1)}deg) scale(${sc.toFixed(3)})`;
+          });
+
+          // Begin parting the real foreground clouds smoothly as the fountain cascades down
+          if (!partingTriggered && elapsed >= 1820) {
+            partingTriggered = true;
+            loftyIntro.classList.add('intro-parting');
+            document.body.classList.remove('intro-active');
+          }
+
+          if (elapsed < totalDuration) {
+            introRaf = requestAnimationFrame(tickFountain);
+          } else {
+            loftyIntro.classList.add('intro-done');
+          }
+        }
+        introRaf = requestAnimationFrame(tickFountain);
+      }
+
+      document.getElementById('skipIntroBtn').addEventListener('click', finishIntro);
+      document.getElementById('replayIntroBtn').addEventListener('click', () => {
+        window.scrollTo({ top: 0, behavior: 'instant' });
+        playOpeningAnimation();
+      });
+
+      playOpeningAnimation();
+
+      function showToast(msg) {
+        const stack = document.getElementById('toastStack');
+        const el = document.createElement('div');
+        el.className = 'pointer-events-auto lofty-card bg-[#FFE14D] text-[#111111] px-4 py-2.5 text-xs font-extrabold flex items-center gap-2';
+        el.style.borderRadius = '14px';
+        el.innerHTML = `<span>★</span><span>${msg}</span>`;
+        stack.appendChild(el);
+        setTimeout(() => {
+          el.style.opacity = '0';
+          el.style.transition = 'opacity 200ms ease';
+          setTimeout(() => el.remove(), 220);
+        }, 2500);
+      }
+
+      /* ---------------------------------------------------------------------
+         1. RENDER 4 FEATURED WORKS ("One Sip at a Time", "Glow", "Riding the Wave", "Move & Sweat")
+         --------------------------------------------------------------------- */
+      const WORKS = [
+        {
+          id: 'one-sip',
+          agency: 'Our Agency',
+          category: 'Shorts Content',
+          title: 'One Sip at a Time',
+          stat: '4.8M Organic Views',
+          bg: '#FFE14D',
+          img: 'https://images.unsplash.com/photo-1514432324607-a09d9b4aefdd?auto=format&fit=crop&w=1000&q=80',
+          desc: 'A rapid-fire TikTok & Reels series turning a craft beverage launch into an everyday cultural ritual with snappy sound design and 1.2-second visual hooks.',
+        },
+        {
+          id: 'glow',
+          agency: 'Creator Collab',
+          category: 'Influencer Marketing',
+          title: 'Glow',
+          stat: '+310% Engagement',
+          bg: '#FF66B3',
+          img: 'https://images.unsplash.com/photo-1507525428034-b723cf961d3e?auto=format&fit=crop&w=1000&q=80',
+          desc: 'Paired 28 LA lifestyle & skincare creators with golden-hour beach storytelling, driving sell-out demand across Sephora and direct-to-consumer drops.',
+        },
+        {
+          id: 'riding-wave',
+          agency: 'Our Agency',
+          category: 'Advertisement',
+          title: 'Riding the Wave',
+          stat: '12.4x Paid ROAS',
+          bg: '#70D6FF',
+          img: 'https://images.unsplash.com/photo-1502680390469-be75c86b636f?auto=format&fit=crop&w=1000&q=80',
+          desc: 'High-impact digital ad spots engineered for thumb-stop performance across Meta, TikTok Spark Ads, and YouTube Shorts.',
+        },
+        {
+          id: 'move-sweat',
+          agency: 'Community Launch',
+          category: 'Social Campaign',
+          title: 'Move & Sweat',
+          stat: '92K Community Signups',
+          bg: '#C8F542',
+          img: 'https://images.unsplash.com/photo-1517836357463-d25dfeac3438?auto=format&fit=crop&w=1000&q=80',
+          desc: 'Multi-platform fitness challenge blending real athlete UGC, live LA pop-up coverage, and daily meme-literate community moments.',
+        },
+      ];
+
+      const worksGrid = document.getElementById('worksGrid');
+      worksGrid.innerHTML = WORKS.map((w) => `
+        <article class="work-card lofty-card lofty-card-hover p-4 sm:p-5 flex flex-col justify-between gap-5 reveal" style="background:${w.bg};">
+          <div class="work-img-wrap rounded-[18px] overflow-hidden border-2 border-[#111111] aspect-[16/11] bg-[#111111] relative">
+            <img src="${w.img}" alt="${w.title}" class="w-full h-full object-cover" onerror="this.src='https://placehold.co/900x620/111111/FFE14D?text=${encodeURIComponent(w.title)}'" />
+            <div class="absolute top-3 left-3 flex flex-wrap gap-2">
+              <span class="px-3 py-1 rounded-full bg-white border-2 border-[#111111] text-[11px] font-extrabold uppercase">${w.category}</span>
+              <span class="px-3 py-1 rounded-full bg-[#111111] text-white text-[11px] mono-num font-bold">${w.stat}</span>
+            </div>
+          </div>
+
+          <div class="flex flex-wrap items-end justify-between gap-4 px-1">
+            <div>
+              <div class="mono-num text-[11px] font-bold uppercase opacity-75">${w.agency}</div>
+              <h3 class="font-display text-3xl sm:text-4xl font-extrabold mt-0.5">${w.title}</h3>
+            </div>
+            <button type="button" data-proj="${w.id}" class="view-proj-btn roll-btn bg-white text-[#111111] px-5 py-2.5 text-xs">
+              <span class="roll-mask">
+                <span class="roll-track">
+                  <span>View project</span>
+                  <span>View project</span>
+                </span>
+              </span>
+              <span>↗</span>
+            </button>
+          </div>
+        </article>
+      `).join('');
+
+      // Project Modal
+      const projectModal = document.getElementById('projectModal');
+      document.querySelectorAll('.view-proj-btn').forEach((btn) => {
+        btn.addEventListener('click', () => {
+          const w = WORKS.find((item) => item.id === btn.dataset.proj);
+          if (!w) return;
+          document.getElementById('projModalImg').src = w.img;
+          document.getElementById('projModalImg').alt = w.title;
+          document.getElementById('projModalCat').textContent = w.category;
+          document.getElementById('projModalStat').textContent = w.stat;
+          document.getElementById('projModalTitle').textContent = w.title;
+          document.getElementById('projModalDesc').textContent = w.desc;
+          projectModal.classList.add('open');
+        });
+      });
+      document.getElementById('projModalClose').addEventListener('click', () => projectModal.classList.remove('open'));
+      projectModal.addEventListener('click', (e) => { if (e.target === projectModal) projectModal.classList.remove('open'); });
+
+      /* ---------------------------------------------------------------------
+         2. RENDER 5 STICKY STACKING SERVICE CARDS
+         --------------------------------------------------------------------- */
+      const SERVICES = [
+        {
+          title: 'Influencer Marketing',
+          bg: '#FFE14D',
+          desc: 'Turning influence into meaningful advocacy through creators who understand the culture, the algorithm, and the moment.',
+          items: ['Influencer Matching', 'Creative Direction for Influencers', 'Campaign Management', 'Performance Reporting'],
+          img: 'https://images.unsplash.com/photo-1516321318423-f06f85e504b3?auto=format&fit=crop&w=900&q=80',
+        },
+        {
+          title: 'Shorts Content',
+          bg: '#FF66B3',
+          desc: 'Fast, bold short-form content built to capture attention and keep audiences watching.',
+          items: ['TikTok / Reels / YouTube Shorts', 'Trend-Adaptive Concepts', 'Fast Editing Pipeline', 'Content Calendar Planning'],
+          img: 'https://images.unsplash.com/photo-1536240478700-b869070f9279?auto=format&fit=crop&w=900&q=80',
+        },
+        {
+          title: 'UGC Production',
+          bg: '#C8F542',
+          desc: 'Real stories from real people, crafted to feel authentic, relatable, and naturally connected to your brand.',
+          items: ['UGC Scriptwriting', 'Talent Sourcing', 'On-Demand UGC Packages', 'Editing & Optimization'],
+          img: 'https://images.unsplash.com/photo-1522071820081-009f0129c71c?auto=format&fit=crop&w=900&q=80',
+        },
+        {
+          title: 'Advertisement',
+          bg: '#70D6FF',
+          desc: 'Crafted for digital platforms, guided by insight, and optimized to deliver strong, measurable results.',
+          items: ['Creative Concept Development', 'Storyboarding & Scripting', 'Production & Filming', 'Paid Media Optimization'],
+          img: 'https://images.unsplash.com/photo-1492691527719-9d1e07e534b4?auto=format&fit=crop&w=900&q=80',
+        },
+        {
+          title: 'Social Campaign',
+          bg: '#B892FF',
+          desc: 'Built for brands ready to lead conversations, spark engagement, and connect with communities at scale.',
+          items: ['Campaign Strategy & Direction', 'Content Production', 'Multi-Platform Deployment', 'Analytics & Growth Reporting'],
+          img: 'https://images.unsplash.com/photo-1552664730-d307ca884978?auto=format&fit=crop&w=900&q=80',
+        },
+      ];
+
+      const servicesStack = document.getElementById('servicesStack');
+      servicesStack.innerHTML = SERVICES.map((s, idx) => `
+        <article class="service-stack-card lofty-card text-[#111111] p-6 sm:p-9 grid grid-cols-1 lg:grid-cols-12 gap-7 items-center" style="background:${s.bg}; --stack-idx:${idx};">
+          <div class="lg:col-span-7 space-y-5">
+            <div class="flex items-center gap-3">
+              <span class="mono-num text-xs font-bold px-3 py-1 rounded-full bg-[#111111] text-white">0${idx + 1}</span>
+              <span class="mono-num text-xs font-bold uppercase tracking-wider">SERVICE ENGINE</span>
+            </div>
+            <h3 class="font-display-tight text-4xl sm:text-5xl font-extrabold">${s.title}</h3>
+            <p class="text-sm sm:text-base font-medium leading-relaxed text-[#111111]/85 max-w-xl">${s.desc}</p>
+
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-2.5 pt-2">
+              ${s.items.map((it, i) => `
+                <div class="px-4 py-2.5 rounded-xl bg-white border-2 border-[#111111] flex items-center gap-2.5 text-xs sm:text-sm font-bold">
+                  <span class="mono-num text-[11px] text-[#3B66FF]">0${i + 1}</span>
+                  <span>${it}</span>
+                </div>
+              `).join('')}
+            </div>
+          </div>
+
+          <div class="lg:col-span-5">
+            <div class="rounded-[18px] overflow-hidden border-2 border-[#111111] aspect-[4/3] bg-[#111111] shadow-[5px_5px_0px_#111111]">
+              <img src="${s.img}" alt="${s.title}" class="w-full h-full object-cover" onerror="this.src='https://placehold.co/800x600/111111/FFFFFF?text=${encodeURIComponent(s.title)}'" />
+            </div>
+          </div>
+        </article>
+      `).join('');
+
+      /* ---------------------------------------------------------------------
+         3. INTERACTIVE BOUNCY SUPERPOWERS CLOUD (ALL 8 TAGS)
+         --------------------------------------------------------------------- */
+      const SUPERPOWERS = [
+        { label: 'Content Chameleons', bg: '#FFFFFF', rot: -4 },
+        { label: 'Culture Fluent', bg: '#FF66B3', rot: 3 },
+        { label: 'Brutally Honest', bg: '#C8F542', rot: -2 },
+        { label: 'Anti-Generic', bg: '#70D6FF', rot: 5 },
+        { label: 'Trendspotting', bg: '#B892FF', rot: -5 },
+        { label: 'Social Intelligence', bg: '#FF6B35', rot: 2, dark: true },
+        { label: 'Meme Literate', bg: '#FFFFFF', rot: -3 },
+        { label: 'Telepathy', bg: '#3B66FF', rot: 4, dark: true },
+      ];
+
+      const powersCloud = document.getElementById('superpowersCloud');
+      powersCloud.innerHTML = SUPERPOWERS.map((p, i) => `
+        <div class="power-pill" data-pidx="${i}" style="background:${p.bg}; color:${p.dark ? '#FFFFFF' : '#111111'}; transform: rotate(${p.rot}deg);">
+          <span>✦</span>
+          <span>${p.label}</span>
+        </div>
+      `).join('');
+
+      powersCloud.querySelectorAll('.power-pill').forEach((pill) => {
+        let dragging = false, sx = 0, sy = 0, ox = 0, oy = 0;
+        pill.addEventListener('pointerdown', (e) => {
+          dragging = true;
+          sx = e.clientX - ox;
+          sy = e.clientY - oy;
+          pill.setPointerCapture(e.pointerId);
+        });
+        pill.addEventListener('pointermove', (e) => {
+          if (!dragging) return;
+          ox = Math.max(-70, Math.min(70, e.clientX - sx));
+          oy = Math.max(-50, Math.min(50, e.clientY - sy));
+          pill.style.transform = `translate3d(${ox}px, ${oy}px, 0) scale(1.06)`;
+        });
+        const snapBack = () => {
+          if (!dragging) return;
+          dragging = false;
+          ox = 0; oy = 0;
+          const idx = Number(pill.dataset.pidx);
+          pill.style.transform = `rotate(${SUPERPOWERS[idx].rot}deg)`;
+        };
+        pill.addEventListener('pointerup', snapBack);
+        pill.addEventListener('pointercancel', snapBack);
+      });
+
+      /* ---------------------------------------------------------------------
+         4. TRUSTED BY MARQUEE (8 BRANDS)
+         --------------------------------------------------------------------- */
+      const BRANDS = ['GooVibe', 'Forgy', 'Blgg', 'Osnake', 'World', 'TechLu', 'Quynsei', 'Bottwat'];
+      const brandMarkup = BRANDS.map((b, i) => `
+        <span class="inline-flex items-center gap-3 px-5 py-2.5 rounded-full bg-white border-2 border-[#111111] shadow-[3px_3px_0px_#111111] font-display text-xl sm:text-2xl font-extrabold">
+          <span class="w-3 h-3 rounded-full border border-[#111111]" style="background:${['#FFE14D','#FF66B3','#C8F542','#70D6FF','#B892FF','#FF6B35','#3B66FF','#FFE14D'][i]};"></span>
+          <span>${b}</span>
+        </span>
+      `).join('');
+      document.getElementById('trustedBrandsA').innerHTML = brandMarkup;
+      document.getElementById('trustedBrandsB').innerHTML = brandMarkup;
+
+      /* ---------------------------------------------------------------------
+         5. TESTIMONIALS CAROUSEL (ALL 4 CLIENT QUOTES)
+         --------------------------------------------------------------------- */
+      const TESTIMONIALS = [
+        {
+          quote: '“Lofty Lab makes trends feel effortless. Fun team, fast results, and videos that actually go viral.”',
+          name: 'Helen Reyes',
+          role: 'Brand Manager',
+          handle: '@GlowUp Cosmetics',
+          accent: '#FF66B3',
+          img: 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=400&q=80',
+        },
+        {
+          quote: '“Creative, colourful, and always on point. Lofty Lab boosted our visibility instantly.”',
+          name: 'Mia Thompson',
+          role: 'Creative Director',
+          handle: '@SnackLab',
+          accent: '#FFE14D',
+          img: 'https://images.unsplash.com/photo-1517841905240-472988babdf9?auto=format&fit=crop&w=400&q=80',
+        },
+        {
+          quote: '“Playful vibe, sharp execution. Their short videos made our brand stand out fast.”',
+          name: 'Alex Nguyen',
+          role: 'Marketing Lead',
+          handle: '@WaveFit App',
+          accent: '#70D6FF',
+          img: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&w=400&q=80',
+        },
+        {
+          quote: '“Lofty Lab captures the LA energy perfectly. Trendy, bold, and super easy to work with.”',
+          name: 'Sophie Martinez',
+          role: 'Founder',
+          handle: '@LA Streetwear Collective',
+          accent: '#C8F542',
+          img: 'https://images.unsplash.com/photo-1524504388940-b1c1722653e1?auto=format&fit=crop&w=400&q=80',
+        },
+      ];
+
+      let testiIdx = 0;
+      const testiStage = document.getElementById('testimonialStage');
+      const testiDots = document.getElementById('testimonialDots');
+
+      function renderTestimonial() {
+        const t = TESTIMONIALS[testiIdx];
+        testiStage.innerHTML = `
+          <div class="md:col-span-4 flex justify-center">
+            <div class="p-2.5 rounded-[22px] border-2 border-[#111111] shadow-[5px_5px_0px_#111111] -rotate-2" style="background:${t.accent};">
+              <img src="${t.img}" alt="${t.name}" class="w-48 h-48 sm:w-56 sm:h-56 object-cover rounded-[14px] border-2 border-[#111111]" onerror="this.src='https://placehold.co/320x320/111111/FFE14D?text=${encodeURIComponent(t.name)}'" />
+            </div>
+          </div>
+          <div class="md:col-span-8 space-y-6">
+            <div class="inline-block px-3.5 py-1 rounded-full border-2 border-[#111111] mono-num text-xs font-bold" style="background:${t.accent};">
+              0${testiIdx + 1} / 0${TESTIMONIALS.length}
+            </div>
+            <blockquote class="font-display text-2xl sm:text-4xl font-extrabold leading-snug text-[#111111]">
+              ${t.quote}
+            </blockquote>
+            <div class="pt-2 border-t-2 border-[#111111]/15 flex flex-wrap items-center justify-between gap-2">
+              <div>
+                <div class="font-display text-xl font-extrabold">${t.name}</div>
+                <div class="text-sm text-[#444444] font-medium">${t.role}</div>
+              </div>
+              <span class="mono-num text-xs font-bold px-3 py-1 rounded-full bg-[#F7F5EE] border-2 border-[#111111]">${t.handle}</span>
+            </div>
+          </div>
+        `;
+
+        testiDots.innerHTML = TESTIMONIALS.map((_, i) => `
+          <button type="button" data-ti="${i}" class="h-3 rounded-full border-2 border-[#111111] transition-all cursor-pointer ${i === testiIdx ? 'w-10 bg-[#111111]' : 'w-3 bg-white'}" aria-label="Go to testimonial ${i + 1}"></button>
+        `).join('');
+        testiDots.querySelectorAll('button').forEach((b) => {
+          b.addEventListener('click', () => { testiIdx = Number(b.dataset.ti); renderTestimonial(); });
+        });
+      }
+
+      document.getElementById('testiPrevBtn').addEventListener('click', () => {
+        testiIdx = (testiIdx - 1 + TESTIMONIALS.length) % TESTIMONIALS.length;
+        renderTestimonial();
+      });
+      document.getElementById('testiNextBtn').addEventListener('click', () => {
+        testiIdx = (testiIdx + 1) % TESTIMONIALS.length;
+        renderTestimonial();
+      });
+      renderTestimonial();
+
+      /* ---------------------------------------------------------------------
+         6. SCROLL REVEALS & COUNT-UP STATS ANIMATION
+         --------------------------------------------------------------------- */
+      const revealEls = document.querySelectorAll('.reveal');
+      const revealObserver = new IntersectionObserver((entries) => {
+        entries.forEach((entry) => {
+          if (entry.isIntersecting) {
+            entry.target.classList.add('in-view');
+            revealObserver.unobserve(entry.target);
+          }
+        });
+      }, { threshold: 0.12 });
+      revealEls.forEach((el) => revealObserver.observe(el));
+
+      // Count-up Metrics (+230%, 12x, 14.6M)
+      const statsBanner = document.getElementById('statsBanner');
+      let statsAnimated = false;
+      const statsObserver = new IntersectionObserver((entries) => {
+        if (!entries[0].isIntersecting || statsAnimated) return;
+        statsAnimated = true;
+        statsBanner.querySelectorAll('[data-count-target]').forEach((el) => {
+          const target = parseFloat(el.dataset.countTarget);
+          const decimals = parseInt(el.dataset.decimals || '0', 10);
+          const prefix = el.dataset.prefix || '';
+          const suffix = el.dataset.suffix || '';
+          const start = performance.now();
+          const dur = 1100;
+          function tick(now) {
+            const t = Math.min(1, (now - start) / dur);
+            const eased = 1 - Math.pow(1 - t, 3);
+            el.textContent = `${prefix}${(target * eased).toFixed(decimals)}${suffix}`;
+            if (t < 1) requestAnimationFrame(tick);
+          }
+          requestAnimationFrame(tick);
+        });
+      }, { threshold: 0.35 });
+      statsObserver.observe(statsBanner);
+
+      /* ---------------------------------------------------------------------
+         7. FULLSCREEN MENU & STRATEGY CALL MODAL
+         --------------------------------------------------------------------- */
+      const menuOverlay = document.getElementById('menuOverlay');
+      const contactModal = document.getElementById('contactModal');
+
+      document.getElementById('menuOpenBtn').addEventListener('click', () => menuOverlay.classList.add('open'));
+      document.getElementById('menuCloseBtn').addEventListener('click', () => menuOverlay.classList.remove('open'));
+      menuOverlay.addEventListener('click', (e) => { if (e.target === menuOverlay) menuOverlay.classList.remove('open'); });
+      document.querySelectorAll('.menu-nav-link').forEach((l) => {
+        l.addEventListener('click', () => menuOverlay.classList.remove('open'));
+      });
+
+      document.querySelectorAll('.open-contact-btn').forEach((btn) => {
+        btn.addEventListener('click', () => {
+          projectModal.classList.remove('open');
+          menuOverlay.classList.remove('open');
+          contactModal.classList.add('open');
+        });
+      });
+      document.getElementById('contactCloseBtn').addEventListener('click', () => contactModal.classList.remove('open'));
+      contactModal.addEventListener('click', (e) => { if (e.target === contactModal) contactModal.classList.remove('open'); });
+
+      window.addEventListener('keydown', (e) => {
+        if (e.key === 'Escape') {
+          finishIntro();
+          menuOverlay.classList.remove('open');
+          projectModal.classList.remove('open');
+          contactModal.classList.remove('open');
+        }
+      });
+
+      document.getElementById('contactForm').addEventListener('submit', (e) => {
+        e.preventDefault();
+        const name = document.getElementById('cName').value.trim();
+        const srv = document.getElementById('cService').value;
+        contactModal.classList.remove('open');
+        e.target.reset();
+        showToast(`Strategy call requested for ${name} (${srv})!`);
+      });
+    })();
+  </script>
+</body>
+</html>
