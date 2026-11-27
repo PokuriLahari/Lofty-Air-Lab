@@ -290,7 +290,7 @@ export function AskChatbotSection({
             />
             <button
               type="submit"
-              disabled={isChatLoading || question.trim().length < 3}
+              disabled={isChatLoading || question.trim().length < 2}
               className="roll-btn bg-[#3B66FF] px-6 py-3 text-xs text-white disabled:cursor-not-allowed disabled:bg-[#E2E8F0] disabled:text-[#475569] disabled:opacity-100 sm:text-sm"
             >
               <Send className="h-4 w-4" aria-hidden="true" />

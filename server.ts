@@ -2,7 +2,7 @@ import 'dotenv/config';
 import express from 'express';
 import path from 'path';
 import { fileURLToPath } from 'url';
-import { GoogleGenAI, Type } from '@google/genai';
+import { GoogleGenAI, ThinkingLevel, Type } from '@google/genai';
 import {
   buildDiurnalPollutionTrend,
   buildWeeklyPollutionTrend,
@@ -938,8 +938,8 @@ async function startServer() {
     const started = Date.now();
     const body = req.body ?? {};
     const question = typeof body.question === 'string' ? body.question.trim().slice(0, 600) : '';
-    if (question.length < 3) {
-      return res.status(400).json({ error: 'Please type a question with at least 3 letters.' });
+    if (question.length < 2) {
+      return res.status(400).json({ error: 'Please type a question with at least 2 characters.' });
     }
 
     const location = typeof body.location === 'string' ? body.location.trim().slice(0, 120) : 'Hyderabad, Telangana';
@@ -969,7 +969,7 @@ async function startServer() {
       typeof body.contextSummary === 'string' ? body.contextSummary.trim().slice(0, 600) : '';
 
     const rawHistory: unknown[] = Array.isArray(body.history) ? body.history : [];
-    const formattedHistory = rawHistory
+    const validTurns = rawHistory
       .filter(
         (turn: unknown): turn is { role: 'user' | 'assistant'; content: string } =>
           Boolean(
@@ -981,11 +981,31 @@ async function startServer() {
               (turn as { content: string }).content.trim().length > 0
           )
       )
-      .slice(-12)
-      .map((turn: { role: 'user' | 'assistant'; content: string }) => ({
-        role: turn.role === 'assistant' ? ('model' as const) : ('user' as const),
+      .slice(-12);
+
+    // Ensure history strictly alternates user -> model and ends with model
+    // before appending the new user question via chat.sendMessage.
+    const formattedHistory: Array<{ role: 'user' | 'model'; parts: Array<{ text: string }> }> = [];
+    for (const turn of validTurns) {
+      const mappedRole = turn.role === 'assistant' ? ('model' as const) : ('user' as const);
+      const expectedRole = formattedHistory.length % 2 === 0 ? 'user' : 'model';
+      if (mappedRole !== expectedRole) {
+        if (mappedRole === 'user' && formattedHistory.length > 0 && formattedHistory[formattedHistory.length - 1].role === 'user') {
+          formattedHistory[formattedHistory.length - 1] = {
+            role: 'user',
+            parts: [{ text: turn.content.trim().slice(0, 800) }],
+          };
+        }
+        continue;
+      }
+      formattedHistory.push({
+        role: mappedRole,
         parts: [{ text: turn.content.trim().slice(0, 800) }],
-      }));
+      });
+    }
+    if (formattedHistory.length > 0 && formattedHistory[formattedHistory.length - 1].role === 'user') {
+      formattedHistory.pop();
+    }
 
     const ai = createGeminiClient();
     if (!ai) {
@@ -1036,27 +1056,30 @@ async function startServer() {
       .join(' ');
 
     try {
-      const modelsToTry = ['gemini-3.1-flash-lite', 'gemini-4-hydrogen'];
+      const modelConfigs: Array<{ model: string; thinkingLevel: ThinkingLevel }> = [
+        { model: 'gemini-4-hydrogen', thinkingLevel: ThinkingLevel.LOW },
+        { model: 'gemini-3.1-flash-lite', thinkingLevel: ThinkingLevel.MINIMAL },
+      ];
       let response: Awaited<ReturnType<ReturnType<typeof ai.chats.create>['sendMessage']>> | null =
         null;
       let lastErr: unknown = null;
 
-      for (const modelName of modelsToTry) {
+      for (const cfg of modelConfigs) {
         try {
-          response = await callWithRetry(async () => {
-            const chat = ai.chats.create({
-              model: modelName,
-              history: formattedHistory,
-              config: {
-                abortSignal: AbortSignal.timeout(25000),
-                systemInstruction,
-              },
-            });
-            return chat.sendMessage({ message: question });
-          }, 1);
-          if (response) break;
+          const chat = ai.chats.create({
+            model: cfg.model,
+            history: formattedHistory,
+            config: {
+              abortSignal: AbortSignal.timeout(15000),
+              systemInstruction,
+              thinkingConfig: { thinkingLevel: cfg.thinkingLevel },
+            },
+          });
+          response = await chat.sendMessage({ message: question });
+          if (response && (response.text ?? '').trim().length > 0) break;
         } catch (err) {
           lastErr = err;
+          console.warn(`[/api/air-chat] Model ${cfg.model} failed:`, err instanceof Error ? err.message : err);
         }
       }
 

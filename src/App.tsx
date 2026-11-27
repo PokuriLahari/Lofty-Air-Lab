@@ -692,6 +692,7 @@ export default function App() {
       const response = await fetch('/api/air-chat', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
+        signal: AbortSignal.timeout(30000),
         body: JSON.stringify({
           question: trimmed,
           history: priorTurns,
@@ -717,9 +718,15 @@ export default function App() {
           contextSummary: `${plan.airAdvisory} Habits checked: ${impact.adoptedCount}/${impact.totalSelectableCount}.`,
         }),
       });
-      const data = await response.json();
-      if (!response.ok) {
-        throw new Error(data.error || 'Could not answer right now.');
+      const rawText = await response.text();
+      let data: { answer?: string; error?: string } = {};
+      try {
+        data = JSON.parse(rawText);
+      } catch {
+        // Non-JSON proxy/server error
+      }
+      if (!response.ok || !data.answer) {
+        throw new Error(data.error || `Could not answer right now (status ${response.status}).`);
       }
 
       const assistantTurn: ChatTurn = {
@@ -730,7 +737,12 @@ export default function App() {
       };
       setChatHistory((prev) => [...prev, assistantTurn]);
     } catch (err) {
-      const msg = err instanceof Error ? err.message : 'Unable to reach assistant.';
+      const msg =
+        err instanceof Error && err.name === 'TimeoutError'
+          ? 'The assistant took too long to reply. Please try sending your question again.'
+          : err instanceof Error
+            ? err.message
+            : 'Unable to reach assistant.';
       setChatError(msg);
     } finally {
       setIsChatLoading(false);
