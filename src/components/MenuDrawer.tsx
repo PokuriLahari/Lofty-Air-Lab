@@ -1,4 +1,4 @@
-import { useEffect } from 'react';
+import { useEffect, useRef } from 'react';
 import { X } from 'lucide-react';
 import type { PlanTabId } from '../types/air';
 
@@ -17,8 +17,11 @@ const MENU_LINKS: Array<{ id: 'air-intelligence' | PlanTabId; href: string; labe
 ];
 
 export function MenuDrawer({ open, onClose, onNavigateSection }: MenuDrawerProps) {
+  const closeBtnRef = useRef<HTMLButtonElement>(null);
+
   useEffect(() => {
     if (!open) return;
+    closeBtnRef.current?.focus();
     const onKeyDown = (e: KeyboardEvent) => {
       if (e.key === 'Escape') onClose();
     };
@@ -44,6 +47,7 @@ export function MenuDrawer({ open, onClose, onNavigateSection }: MenuDrawerProps
             Lofty Air Lab · Sections
           </span>
           <button
+            ref={closeBtnRef}
             type="button"
             onClick={onClose}
             aria-label="Close navigation menu"

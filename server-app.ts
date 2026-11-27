@@ -30,6 +30,36 @@ import type {
 
 const GMP_ATTRIBUTION_HEADER = 'gmp_mcp_codeassist_v1_aistudio';
 const alertSubscriptions = new globalThis.Map<string, SmogAlertSubscription>();
+const MAX_ALERT_SUBSCRIPTIONS = 500;
+
+interface TtlEntry<T> {
+  value: T;
+  expiresAt: number;
+}
+
+const openMeteoCache = new globalThis.Map<string, TtlEntry<LocalAirReading>>();
+const citySearchCache = new globalThis.Map<
+  string,
+  TtlEntry<{ found: boolean; exactMatch: CitySuggestion | null; suggestions: CitySuggestion[] }>
+>();
+
+function readTtlCache<T>(cache: Map<string, TtlEntry<T>>, key: string): T | null {
+  const hit = cache.get(key);
+  if (!hit) return null;
+  if (Date.now() > hit.expiresAt) {
+    cache.delete(key);
+    return null;
+  }
+  return hit.value;
+}
+
+function writeTtlCache<T>(cache: Map<string, TtlEntry<T>>, key: string, value: T, ttlMs: number): void {
+  if (cache.size >= 100) {
+    const oldestKey = cache.keys().next().value;
+    if (oldestKey !== undefined) cache.delete(oldestKey);
+  }
+  cache.set(key, { value, expiresAt: Date.now() + ttlMs });
+}
 
 function getServerMapsApiKey(): string | null {
   const key =
@@ -375,6 +405,7 @@ async function fetchLocalAirQuality(
   const url = `https://airquality.googleapis.com/v1/currentConditions:lookup?key=${encodeURIComponent(apiKey)}`;
   const upstream = await fetch(url, {
     method: 'POST',
+    signal: AbortSignal.timeout(8000),
     headers: {
       'Content-Type': 'application/json',
       'X-Goog-Maps-Solution-ID': GMP_ATTRIBUTION_HEADER,
@@ -449,6 +480,12 @@ function levenshtein(a: string, b: string): number {
 
 export function createApiApp(): express.Express {
   const app = express();
+  app.disable('x-powered-by');
+  app.use((_req, res, next) => {
+    res.setHeader('X-Content-Type-Options', 'nosniff');
+    res.setHeader('Referrer-Policy', 'strict-origin-when-cross-origin');
+    next();
+  });
   app.use(express.json({ limit: '128kb' }));
 
   app.get('/api/health', (_req, res) => {
@@ -586,6 +623,7 @@ export function createApiApp(): express.Express {
 
       const upstream = await fetch(url, {
         method: 'GET',
+        signal: AbortSignal.timeout(8000),
         headers: {
           'Content-Type': 'application/json',
           'X-Goog-Api-Key': apiKey,
@@ -670,6 +708,12 @@ export function createApiApp(): express.Express {
       return res.status(400).json({ error: 'Type at least 2 characters for a city name.' });
     }
 
+    const cacheKey = rawQuery.toLowerCase();
+    const cachedCityResult = readTtlCache(citySearchCache, cacheKey);
+    if (cachedCityResult) {
+      return res.json(cachedCityResult);
+    }
+
     const fetchOpenMeteoGeo = async (name: string): Promise<CitySuggestion[]> => {
       const u = new URL('https://geocoding-api.open-meteo.com/v1/search');
       u.searchParams.set('name', name);
@@ -700,11 +744,13 @@ export function createApiApp(): express.Express {
           results.find((r) => r.country === 'India') ??
           results[0];
 
-        return res.json({
+        const payload = {
           found: true,
           exactMatch: indianFirst,
           suggestions: results.slice(0, 4),
-        });
+        };
+        writeTtlCache(citySearchCache, cacheKey, payload, 10 * 60 * 1000);
+        return res.json(payload);
       }
 
       const prefixResults =
@@ -749,6 +795,16 @@ export function createApiApp(): express.Express {
     const lng = Number(body.lng);
     if (!Number.isFinite(lat) || lat < -90 || lat > 90 || !Number.isFinite(lng) || lng < -180 || lng > 180) {
       return res.status(400).json({ error: 'Valid latitude and longitude coordinates are required.' });
+    }
+
+    const labelKey =
+      typeof body.locationLabel === 'string' && !isCoordinateLabel(body.locationLabel)
+        ? formatShortCityName(body.locationLabel, { lat, lng }).toLowerCase()
+        : '';
+    const airCacheKey = `${lat.toFixed(2)},${lng.toFixed(2)}:${labelKey}`;
+    const cachedAir = readTtlCache(openMeteoCache, airCacheKey);
+    if (cachedAir) {
+      return res.json(cachedAir);
     }
 
     try {
@@ -868,6 +924,7 @@ export function createApiApp(): express.Express {
         weeklyTrend,
       };
 
+      writeTtlCache(openMeteoCache, airCacheKey, reading, 3 * 60 * 1000);
       return res.json(reading);
     } catch (err) {
       const msg = err instanceof Error ? err.message : 'Network error';
@@ -928,6 +985,10 @@ export function createApiApp(): express.Express {
       }
     }
 
+    if (alertSubscriptions.size >= MAX_ALERT_SUBSCRIPTIONS && !alertSubscriptions.has(id)) {
+      const oldestAlertId = alertSubscriptions.keys().next().value;
+      if (oldestAlertId !== undefined) alertSubscriptions.delete(oldestAlertId);
+    }
     alertSubscriptions.set(id, subscription);
     const shouldAlertNow = shouldTriggerSmogAlert(
       subscription.lastReading,

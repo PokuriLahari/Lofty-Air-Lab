@@ -827,9 +827,16 @@ export default function App() {
         </div>
       )}
 
+      <a
+        href="#main-content"
+        className="sr-only focus:not-sr-only focus:fixed focus:top-3 focus:left-3 focus:z-50 focus:rounded-full focus:border-2 focus:border-[#111111] focus:bg-[#FFE14D] focus:px-4 focus:py-2 focus:text-xs focus:font-extrabold focus:text-[#111111]"
+      >
+        Skip to main content
+      </a>
+
       <Navbar onOpenMenu={() => setMenuOpen(true)} onNavigateSection={navigateToSection} />
 
-      <main>
+      <main id="main-content">
         <HeroSection
           clarity={impact.skyClarityScore}
           hazeLevel={aqiMeta.hazeLevel}
@@ -882,16 +889,21 @@ export default function App() {
                     id={`tab-${tab.id}`}
                     type="button"
                     role="tab"
+                    tabIndex={isSelected ? 0 : -1}
                     aria-selected={isSelected}
                     aria-controls={`panel-${tab.id}`}
                     onClick={() => setActivePlanTab(tab.id)}
                     onKeyDown={(e) => {
-                      if (e.key === 'ArrowRight') {
-                        const next = PLAN_TABS[(idx + 1) % PLAN_TABS.length];
-                        setActivePlanTab(next.id);
-                      } else if (e.key === 'ArrowLeft') {
-                        const prev = PLAN_TABS[(idx - 1 + PLAN_TABS.length) % PLAN_TABS.length];
-                        setActivePlanTab(prev.id);
+                      let nextIdx: number | null = null;
+                      if (e.key === 'ArrowRight') nextIdx = (idx + 1) % PLAN_TABS.length;
+                      else if (e.key === 'ArrowLeft') nextIdx = (idx - 1 + PLAN_TABS.length) % PLAN_TABS.length;
+                      else if (e.key === 'Home') nextIdx = 0;
+                      else if (e.key === 'End') nextIdx = PLAN_TABS.length - 1;
+                      if (nextIdx !== null) {
+                        e.preventDefault();
+                        const target = PLAN_TABS[nextIdx];
+                        setActivePlanTab(target.id);
+                        document.getElementById(`tab-${target.id}`)?.focus();
                       }
                     }}
                     className={`rounded-xl px-4 py-2.5 text-xs font-extrabold whitespace-nowrap transition-colors sm:text-sm ${
